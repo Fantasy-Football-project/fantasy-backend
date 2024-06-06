@@ -1,23 +1,23 @@
 server:
   port: 8080
 
+#need to check what good practice and stuff for this is
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5332/customer
+    url: jdbc:postgresql://localhost:5332/backenddb
     username: sathvik
     password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+     hibernate:
+       dialect: org.hibernate.dialect.PostgreSQLDialect
+       format_sql: true
     show-sql: true
   main:
     web-application-type: servlet
-
-security:
-  jwt:
-    token:
-      secret-key: my-secret-key
+  sql:
+    init:
+      platform: postgres

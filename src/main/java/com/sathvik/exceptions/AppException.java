@@ -2,6 +2,7 @@ package com.sathvik.exceptions;
 
 import org.springframework.http.HttpStatus;
 
+//This is a custom exception.
 public class AppException extends RuntimeException {
 
     private final HttpStatus code;

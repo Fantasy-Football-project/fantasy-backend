@@ -4,10 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.sathvik.dto.UserDto;
 import com.sathvik.services.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 
@@ -50,12 +51,11 @@ public class UserAuthProvider {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
 
         //To verify the JWT, we first need to decode the token.
-        DecodedJWT jwt = verifier.verify(token);
+        DecodedJWT decodedJWT = verifier.verify(token);
 
-        UserDto user = userService.findByLogin(decoded.getIssuer());
+        UserDto user = userService.findByLogin(decodedJWT.getIssuer());
 
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
         //We are also checking to see if the user already exists in the database.
     }
-
 }

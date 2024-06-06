@@ -48,6 +48,4 @@ public class WebConfig {
         config.setMaxAge(3600L); //The time the options request is accepted (30 min or 1 hour)
         return config;
     }
-
-
 }

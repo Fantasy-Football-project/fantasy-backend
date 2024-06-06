@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -21,7 +23,8 @@ public class SecurityConfig {
     private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
     private final UserAuthProvider userAuthProvider;
 
-    //This method makes it so that all endpoints require authorization, except for /messages.
+    //This method makes it so that all endpoints require authorization, except for /login
+    // and /register.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,9 +34,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) //we can disable csrf (search up why)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests((authz) -> authz
-                        //The end points that do not require authentication
-                        .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll()
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/login", "/register").permitAll() //The end points that do not require authentication
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

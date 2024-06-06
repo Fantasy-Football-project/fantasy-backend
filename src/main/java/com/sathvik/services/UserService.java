@@ -1,22 +1,28 @@
 //This service will handle the login and register functions/functionality.
 package com.sathvik.services;
 
-import com.sathvik.config.UserDto;
+import com.sathvik.dto.UserDto;
 import com.sathvik.dto.CredentialsDto;
+import com.sathvik.dto.SignUpDto;
 import com.sathvik.entities.User;
 import com.sathvik.exceptions.AppException;
 import com.sathvik.mappers.UserMapper;
 import com.sathvik.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+import java.nio.CharBuffer;
+import java.util.Optional;
+
+@RequiredArgsConstructor
+@Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
+    //Password encoder to avoid having the password stored in plain text.
+    private final PasswordEncoder passwordEncoder;
 
     public UserDto findByLogin(String login) {
         User user = userRepository.findByLogin(login)
@@ -28,6 +34,28 @@ public class UserService {
         User user = userRepository.findByLogin(credentialsDto.getLogin())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
-        
+        if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.getPassword()), user.getPassword())) {
+            return userMapper.toUserDto(user);
+        }
+
+        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+    }
+
+    public UserDto register(SignUpDto userDto) {
+        Optional<User> optionalUser = userRepository.findByLogin(userDto.getLogin());
+
+        //Condition checks if the user already exists on this register attempt.
+        if (optionalUser.isPresent()) {
+            throw new AppException("User already exists", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userMapper.signUpToUser(userDto);
+
+        //To hash and encode the password and not store in plain text.
+        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.getPassword())));
+
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toUserDto(savedUser);
     }
 }

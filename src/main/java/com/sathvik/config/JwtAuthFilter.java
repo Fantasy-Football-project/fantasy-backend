@@ -1,6 +1,5 @@
 package com.sathvik.config;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import java.io.IOException;
 //The parent class is so that this filter is only used once per request.
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private UserAuthProvider userAuthProvider;
+    private final UserAuthProvider userAuthProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

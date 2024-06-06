@@ -1,4 +1,4 @@
-package com.sathvik.config;
+package com.sathvik.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class UserDto {
-    private long id;
+public class SignUpDto {
     private String firstName;
     private String lastName;
     private String login;
-    private String token;
-
+    private char[] password;
 }
