@@ -1,5 +1,5 @@
 //I dont understand the code whatsoever i just know its meant to return the custom
-//exception message.
+//exception message. It is an authentication error.
 package com.sathvik.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +18,10 @@ import java.io.IOException;
 public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /*
+    This method gets called when an unauthorized user tries to access authorized content.
+
+     */
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
@@ -26,6 +30,5 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //returns unauthorized http code
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         MAPPER.writeValue(response.getOutputStream(), new ErrorDto("Unauthorized path"));
-
     }
 }

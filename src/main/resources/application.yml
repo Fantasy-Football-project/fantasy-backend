@@ -16,3 +16,8 @@ spring:
     show-sql: true
   main:
     web-application-type: servlet
+
+security:
+  jwt:
+    token:
+      secret-key: my-secret-key
