@@ -6,12 +6,12 @@ import com.sathvik.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
     UserDto toUserDto(User user);
 
     //Password is ignored because it is not of the same format.
-    //@Mapping(target = "password", ignore = true)
+    @Mapping(target = "password", ignore = true)
     User signUpToUser(SignUpDto signUpDto);
 }
