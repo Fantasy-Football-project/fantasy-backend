@@ -17,10 +17,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "firstName", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "lastName", nullable = false)
     private String lastName;
 
     @Column(nullable = false)
@@ -28,4 +28,10 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    private int wins;
+    private int losses;
+    private int draws;
+
+
 }
