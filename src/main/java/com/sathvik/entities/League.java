@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.naming.Name;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 
 @AllArgsConstructor
@@ -37,4 +39,62 @@ public class League {
             orphanRemoval = true
     )
     private ArrayList<Team> teams;
+
+    private enum Position {
+        QB,
+        RB,
+        WR,
+        TE,
+        FLEX,
+        DST,
+        K,
+        BE,
+        IR
+    }
+
+    private int rosterSize;
+
+    @ElementCollection
+    private HashMap<Position, Integer> maxForPosition;
+
+    @ElementCollection
+    private HashMap<Position, Integer> numberOfStarters;
+
+    private boolean ppr;
+    private boolean nonPPR;
+    private boolean halfPPR;
+
+    //INSERT SCORING LATER
+
+    //IMPLEMENT DRAFT SETTINGS
+
+    private int playoffTeams;
+    private int playoffGameLength;
+    private int regularSeasonGames;
+
+    private enum tradeDeadline {
+        NOV25,
+        DEC2,
+        DEC9,
+        DEC16,
+        DEC23,
+        DEC30,
+        JAN5;
+        /*private Date(final Date date){
+            this.date = date;
+        }
+        private Date date;*/
+    }
+
+    private enum waiverSetting {
+        STANDINGS,
+        RECENT_TRANSACTION
+    }
+
+    private enum playerAcquisitionSystem {
+        WAIVERS,
+        INSTANT_ADD
+    }
+
+    private final int TRADE_REVIEW_PERIOD = 1;
 }

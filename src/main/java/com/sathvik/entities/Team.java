@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,6 +24,7 @@ public class Team {
     @ManyToOne
     @JoinTable(name = "league_id")
     private League league;
+    //might need another one but prolly not for waiverOrder
 
     @ManyToMany
     @JoinTable(
@@ -31,4 +33,9 @@ public class Team {
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
     private List<Player> teamPlayers;
+
+    private Date mostRecentTransaction;
+
+    private double pointsFor;
+    private double pointsAgainst;
 }
