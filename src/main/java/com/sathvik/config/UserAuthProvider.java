@@ -20,8 +20,8 @@ import java.util.Date;
 @Component
 public class UserAuthProvider {
     //In order to generate and read the JWT, a secret key is necessary.
-    @Value("${security.jwt.token.secret-key:secret-key}")
-    private String secretKey;
+    //@Value("${security.jwt.token.secret-key:secret-key}")
+    private String secretKey = "zZrq0sZK1yt9RJk51RTJ/jeU6WERbvr8nqKMWQJRX1E=";
 
     private final UserService userService;
 
@@ -32,8 +32,8 @@ public class UserAuthProvider {
         //The purpose of this line is to avoid having the secret key in plaintext in the JVM,
         //and rather have it encoded.
 
-        //secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        secretKey = new String(Base64.getEncoder().encode(secretKey.getBytes()));
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        //secretKey = new String(Base64.getEncoder().encode(secretKey.getBytes()));
     }
 
     //The purpose of this method is to create the JWT token. It is set to expire after an hour.

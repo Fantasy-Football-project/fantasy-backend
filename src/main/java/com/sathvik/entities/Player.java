@@ -36,7 +36,10 @@ public class Player {
     //has to be dependent on scoring system, data scraping
     private int averagePoints;
     private int currentPoints; //for the week
-    //private ArrayList<Integer> pastScores; - gives error not exactly sure. might need an entity for scores
+
+    @ElementCollection
+    private ArrayList<Integer> pastScores;
+    //gives error not exactly sure. might need an entity for scores - not anymore
 
     @ManyToMany(mappedBy = "teamPlayers")
     private List<Team> fantasyTeams;
