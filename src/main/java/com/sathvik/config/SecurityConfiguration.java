@@ -2,7 +2,10 @@ package com.sathvik.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -12,11 +15,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -32,7 +39,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/register", "/login").permitAll() // The endpoints that do not require authentication
                         .anyRequest().authenticated()
@@ -46,18 +53,33 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        configuration.setAllowCredentials(true);
-
+    public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = getCorsConfiguration();
+        source.registerCorsConfiguration("/**", config); //applied for all requests
 
-        source.registerCorsConfiguration("/**",configuration);
+        return new CorsFilter(source);
+    }
 
-        return source;
+    private static CorsConfiguration getCorsConfiguration() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true); //allows credentials ig?
+        config.addAllowedOrigin("http://localhost:3000"); //accept requests from the frontend url
+        //Http Headers are additional info that go with the request to the server.
+        config.setAllowedHeaders(Arrays.asList(
+                HttpHeaders.AUTHORIZATION,
+                HttpHeaders.CONTENT_TYPE,
+                HttpHeaders.ACCEPT
+        ));
+        //Allowing crud operation requests.
+        config.setAllowedMethods(Arrays.asList(
+                HttpMethod.GET.name(),
+                HttpMethod.POST.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.DELETE.name()
+        ));
+
+        config.setMaxAge(3600L); //The time the options request is accepted (30 min or 1 hour)
+        return config;
     }
 }
