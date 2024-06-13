@@ -25,6 +25,8 @@ public class JwtService {
     private long jwtExpiration;
 
     public String extractUsername(String token) {
+        System.out.println("Extracting username from token: " + token);
+        System.out.println("Extracting username from token: " + secretKey);
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -74,12 +76,17 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            System.out.println("Exception in extracting claims: " + e.getMessage());
+            throw e;
+        }
     }
 
     private Key getSignInKey() {

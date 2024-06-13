@@ -49,15 +49,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
+            System.out.print("reached this 0");
             final String jwt = authHeader.substring(7);
+            System.out.print("reached this 0.1");
+            System.out.println("Received JWT: " + jwt);
             final String userEmail = jwtService.extractUsername(jwt);
-
+            System.out.print("reached this 0.2");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+            System.out.println("reached this 1");
             if (userEmail != null && authentication == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
+                System.out.println("reached this 2");
                 if (jwtService.isTokenValid(jwt, userDetails)) {
+                    System.out.println("reached this 3");
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
@@ -71,6 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
+            System.out.println("error" + exception.getMessage());
             handlerExceptionResolver.resolveException(request, response, null, exception);
         }
     }
