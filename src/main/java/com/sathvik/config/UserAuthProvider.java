@@ -20,8 +20,8 @@ import java.util.Date;
 @Component
 public class UserAuthProvider {
     //In order to generate and read the JWT, a secret key is necessary.
-    //@Value("${security.jwt.token.secret-key:secret-key}")
-    private String secretKey = "zZrq0sZK1yt9RJk51RTJ/jeU6WERbvr8nqKMWQJRX1E=";
+    @Value("${security.jwt.token.secret-key}")
+    private String secretKey;
 
     private final UserService userService;
 
@@ -44,7 +44,7 @@ public class UserAuthProvider {
         System.out.println("Secret Key (Base64 Encoded): " + secretKey);
 
         String token = JWT.create()
-                .withIssuer(login)
+                .withSubject(login)
                 .withIssuedAt(now)
                 .withExpiresAt(expiryDate)
                 .sign(Algorithm.HMAC256(secretKey));
