@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+security:
+  jwt:
+    token:
+      secret-key: my-secret
+
 #need to check what good practice and stuff for this is
 spring:
   datasource:
@@ -21,8 +26,3 @@ spring:
   sql:
     init:
       platform: postgres
-
-security:
-  jwt:
-    token:
-      secret-key: 7c9324123ec96dfc5ccf7a200d1dd0bd0dfdaba08f776f20edcfdc060fc34045

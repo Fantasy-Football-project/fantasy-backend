@@ -20,7 +20,7 @@ import java.util.Date;
 @Component
 public class UserAuthProvider {
     //In order to generate and read the JWT, a secret key is necessary.
-    @Value("${security.jwt.token.secret-key}")
+    @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
     private final UserService userService;
@@ -32,8 +32,20 @@ public class UserAuthProvider {
         //The purpose of this line is to avoid having the secret key in plaintext in the JVM,
         //and rather have it encoded.
 
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        if (!isBase64Encoded(secretKey)) {
+            secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        }
+        //secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         //secretKey = new String(Base64.getEncoder().encode(secretKey.getBytes()));
+    }
+
+    private boolean isBase64Encoded(String str) {
+        try {
+            Base64.getDecoder().decode(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     //The purpose of this method is to create the JWT token. It is set to expire after an hour.
@@ -41,13 +53,15 @@ public class UserAuthProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 3600000);
 
-        System.out.println("Secret Key (Base64 Encoded): " + secretKey);
+        System.out.println("Creation: Secret Key (Base64 Encoded): " + secretKey);
+
+        byte[] decodedSecretKey = Base64.getDecoder().decode(secretKey);
 
         String token = JWT.create()
-                .withSubject(login)
+                .withIssuer(login)
                 .withIssuedAt(now)
                 .withExpiresAt(expiryDate)
-                .sign(Algorithm.HMAC256(secretKey));
+                .sign(Algorithm.HMAC256(decodedSecretKey));
 
         System.out.println("Token created: " + token);
 
@@ -56,20 +70,13 @@ public class UserAuthProvider {
 
     //The purpose of this method is to validate the token.
     public UsernamePasswordAuthenticationToken validateToken(String token) {
-        System.out.println("Validating Token: " + token);
-        System.out.println("Secret Key (Base64 Encoded): " + secretKey);
+        System.out.println("Validating Token: |" + token + "|");
 
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(Base64.getDecoder().decode(secretKey))).build();
 
-        System.out.println("Reached .require");
 
         //To verify the JWT, we first need to decode the token.
         DecodedJWT decodedJWT = verifier.verify(token);
-
-        System.out.println("Token Issuer: " + decodedJWT.getIssuer());
-        System.out.println("Token Expiration Time: " + new Date(decodedJWT.getExpiresAt().getTime()));
-        System.out.println("Current Time: " + new Date());
-
         UserDto user = userService.findByLogin(decodedJWT.getIssuer());
 
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());

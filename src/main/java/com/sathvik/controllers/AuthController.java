@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.Base64;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,12 +48,14 @@ public class AuthController {
     }
 
     @PostMapping("/validateToken")
-    public ResponseEntity<?> validateToken(@RequestBody String token) {
+    public ResponseEntity<?> validateToken(@RequestBody Map<String, String> body) {
         try {
-            byte[] decodedToken = Base64.getDecoder().decode(token);
-            String decodedTokenString = new String(decodedToken);
-            UsernamePasswordAuthenticationToken auth = userAuthProvider.validateToken(decodedTokenString);
-            //UsernamePasswordAuthenticationToken auth = userAuthProvider.validateToken(token);
+            String token = body.get("token");
+            if (token == null || token.isEmpty()) {
+                return ResponseEntity.badRequest().body("Token is missing");
+            }
+
+            UsernamePasswordAuthenticationToken auth = userAuthProvider.validateToken(token);
             return ResponseEntity.ok(auth != null ? "Token is valid" : "Token is invalid");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token validation failed: " + e.getMessage());
