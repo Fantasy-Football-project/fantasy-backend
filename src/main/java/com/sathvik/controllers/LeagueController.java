@@ -1,5 +1,6 @@
 package com.sathvik.controllers;
 
+import com.sathvik.dto.CreateLeagueDto;
 import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
 import com.sathvik.services.LeagueService;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,30 +18,20 @@ public class LeagueController {
 
     private final LeagueService leagueService;
 
-    @GetMapping("/{league_id}")
-    public ResponseEntity<League> getLeagueById(@PathVariable Long league_id) {
-        League league = leagueService.getLeagueById(league_id);
+    @GetMapping("/{user_id}")
+    public ResponseEntity<List<League>> getLeagues(@PathVariable Long user_id) {
+        List<League> leagues = leagueService.getAllLeagues(user_id);
 
         //Checking to see if the league exists.
-        if (league != null) {
-            return ResponseEntity.ok().body(league);
+        if (leagues != null) {
+            return ResponseEntity.ok().body(leagues);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/create-league")
-    public ResponseEntity<League> createLeague(@RequestBody League league) {
-        /*UserDto user = userService.register(userDto);
-
-        //Once registered, a fresh JWT is made.
-        user.setToken(userAuthProvider.createToken(user.getLogin()));
-
-        //When creating an entity (in this case a user), it is best practice to return
-        //a 201 HTTP code, with the URL where we can find the new entity.
-        return ResponseEntity.created(URI.create("/users/" + user.getId()))
-                .body(user); */
-
+    public ResponseEntity<League> createLeague(@RequestBody CreateLeagueDto league) {
         League createdLeague = leagueService.createLeague(league);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()

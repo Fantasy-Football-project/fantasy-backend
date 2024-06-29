@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.naming.Name;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,6 +36,9 @@ public class League {
             orphanRemoval = true
     )
     private ArrayList<Team> teams;
+
+    @ManyToMany(mappedBy = "leagues")
+    private List<User> users = new ArrayList<>();
 
     private enum Position {
         QB,

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -29,9 +31,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private int wins;
-    private int losses;
-    private int draws;
+    @ManyToMany
+    @JoinTable(
+            name = "users_leagues",
+            joinColumns = @JoinColumn(name = "user_"),
+            inverseJoinColumns = @JoinColumn(name = "league_id")
+    )
+    private List<League> leagues;
 
 
 }
