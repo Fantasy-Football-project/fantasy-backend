@@ -1,11 +1,6 @@
 server:
   port: 8080
 
-security:
-  jwt:
-    token:
-      secret-key: my-secret
-
 #need to check what good practice and stuff for this is
 spring:
   datasource:
