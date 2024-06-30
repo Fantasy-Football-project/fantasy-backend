@@ -18,9 +18,9 @@ public class LeagueController {
 
     private final LeagueService leagueService;
 
-    @GetMapping("/{user_id}")
-    public ResponseEntity<List<League>> getLeagues(@PathVariable Long user_id) {
-        List<League> leagues = leagueService.getAllLeagues(user_id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<League>> getLeagues(@PathVariable Long userId) {
+        List<League> leagues = leagueService.getAllLeagues(userId);
 
         //Checking to see if the league exists.
         if (leagues != null) {
