@@ -14,7 +14,8 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class CreateLeagueDto {
     private String leagueName;
-    private ArrayList<Team> teams;
+    //private ArrayList<Team> teams;
+    private int numTeams;
     private boolean ppr;
     private boolean nonPPR;
     private boolean halfPPR;

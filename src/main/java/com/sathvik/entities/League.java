@@ -37,6 +37,8 @@ public class League {
     )
     private ArrayList<Team> teams;
 
+    private int numTeams;
+
     @ManyToMany(mappedBy = "leagues")
     private List<User> users = new ArrayList<>();
 
