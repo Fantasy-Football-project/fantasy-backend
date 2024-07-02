@@ -28,14 +28,14 @@ public class League {
             joinColumns = @JoinColumn(name = "league_id"),
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
-    private HashSet<Player> players;
+    private Set<Player> players = new HashSet<>();
 
     @OneToMany(
             mappedBy = "league",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private ArrayList<Team> teams;
+    private List<Team> teams = new ArrayList<>();
 
     private int numTeams;
 
@@ -56,11 +56,11 @@ public class League {
 
     private int rosterSize;
 
-    @ElementCollection
+    /*@ElementCollection
     private HashMap<Position, Integer> maxForPosition;
 
     @ElementCollection
-    private HashMap<Position, Integer> numberOfStarters;
+    private HashMap<Position, Integer> numberOfStarters;*/
 
     private boolean ppr;
     private boolean nonPPR;

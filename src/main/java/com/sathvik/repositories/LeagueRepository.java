@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface LeagueRepository extends JpaRepository<League, Long> {
-    @Query("SELECT l FROM League l JOIN l.users u WHERE u.id = :userId")
-    List<League> findLeaguesByUserId(@Param("userId") Long userId);
+
+    List<League> findByUsers_Id(Long id);
 }

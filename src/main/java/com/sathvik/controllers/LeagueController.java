@@ -39,8 +39,8 @@ public class LeagueController {
     }
 
     @PostMapping("/create-league")
-    public ResponseEntity<League> createLeague(@RequestBody CreateLeagueDto league) {
-        League createdLeague = leagueService.createLeague(league);
+    public ResponseEntity<League> createLeague(@RequestBody CreateLeagueDto league, String username) {
+        League createdLeague = leagueService.createLeague(league, username);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
