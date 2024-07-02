@@ -25,7 +25,7 @@ public class LeagueService {
     This method has a CreateLeagueDto object as a parameter, which contains the
     basic information needed to create a league. The league is saved into the database.
      */
-    public League createLeague(CreateLeagueDto league, String username) {
+    public League createLeague(CreateLeagueDto league) {
         League newLeague = new League();
         newLeague.setLeagueName(league.getLeagueName());
         newLeague.setNumTeams(league.getNumTeams());
@@ -33,12 +33,13 @@ public class LeagueService {
         newLeague.setNonPPR(league.getNonPPR());
         newLeague.setHalfPPR(league.getHalfPPR());
 
-        //User user = userRepository.findByLogin(username)
-                //.orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        User user = userRepository.findByLogin(league.getUsername())
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
-        //user.getLeagues().add(newLeague);
-        //User saved = userRepository.save(user);
-        //newLeague.getUsers().add(saved);
+        user.getLeagues().add(newLeague);
+        User saved = userRepository.save(user);
+        //userRepository.save(user);
+        newLeague.getUsers().add(saved);
 
         //userRepository.save(user);
         leagueRepository.save(newLeague);

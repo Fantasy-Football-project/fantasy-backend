@@ -31,4 +31,6 @@ public class CreateLeagueDto {
     public boolean getHalfPPR() {
         return halfPPR;
     }
+
+    private String username;
 }
