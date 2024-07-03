@@ -56,11 +56,11 @@ public class League {
 
     private int rosterSize;
 
-    /*@ElementCollection
-    private HashMap<Position, Integer> maxForPosition;
+    @ElementCollection
+    private Map<Position, Integer> maxForPosition = new HashMap<>();
 
     @ElementCollection
-    private HashMap<Position, Integer> numberOfStarters;*/
+    private Map<Position, Integer> numberOfStarters = new HashMap<>();
 
     private boolean ppr;
     private boolean nonPPR;

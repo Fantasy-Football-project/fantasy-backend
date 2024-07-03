@@ -35,7 +35,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 try {
                     //If the credentials are valid, the authentication bean is added into the
                     //security context.
-                    System.out.println(elements[1]);
                     SecurityContextHolder.getContext().setAuthentication(
                             userAuthProvider.validateToken(elements[1])
                     );

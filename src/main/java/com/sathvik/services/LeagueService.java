@@ -18,13 +18,14 @@ import java.util.Optional;
 @Service
 public class LeagueService {
     private final LeagueRepository leagueRepository;
-    private final UserService userService;
     private final UserRepository userRepository;
 
     /*
     This method has a CreateLeagueDto object as a parameter, which contains the
     basic information needed to create a league. The league is saved into the database.
      */
+
+    //NEED TO MAKE SURE TO DEFAULT OTHER VALUES LATER
     public League createLeague(CreateLeagueDto league) {
         League newLeague = new League();
         newLeague.setLeagueName(league.getLeagueName());
@@ -38,10 +39,10 @@ public class LeagueService {
 
         user.getLeagues().add(newLeague);
         User saved = userRepository.save(user);
-        //userRepository.save(user);
         newLeague.getUsers().add(saved);
 
-        //userRepository.save(user);
+        //Because of the cascade annotation, I only have to save it once, and it'll also
+        //save to the user.
         leagueRepository.save(newLeague);
 
         return newLeague;

@@ -21,10 +21,18 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String teamName;
+
+    private String fullName;
+
     @ManyToOne
     @JoinTable(name = "league_id")
     private League league;
     //might need another one but prolly not for waiverOrder
+
+    @ManyToOne
+    @JoinTable(name = "user_id")
+    private User user;
 
     @ManyToMany
     @JoinTable(

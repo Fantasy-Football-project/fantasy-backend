@@ -13,6 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+//Change routing to overall leagues and then add/get. Can keep consistent with future
+//controllers.
 @RequiredArgsConstructor
 @RestController
 public class LeagueController {
