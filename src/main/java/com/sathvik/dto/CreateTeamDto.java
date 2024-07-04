@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class CreateTeamDto {
+    private String leagueName;
     private String teamName;
 
     private String fullName;

@@ -20,6 +20,12 @@ public class CreateLeagueDto {
     private boolean nonPPR;
     private boolean halfPPR;
 
+    private String username;
+
+    //Information for the team creating the league to fill out.
+    private String teamName;
+    private String fullName;
+
     public boolean getPpr() {
         return ppr;
     }
@@ -32,5 +38,4 @@ public class CreateLeagueDto {
         return halfPPR;
     }
 
-    private String username;
 }

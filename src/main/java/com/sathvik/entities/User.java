@@ -2,11 +2,9 @@ package com.sathvik.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Data
+//@Getter
+//@Setter
 @Entity
 @Table(name = "app_user")
 public class User {
@@ -57,7 +57,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "team_id")
     )
     @JsonIgnore
-    private Set<Team> teams = new HashSet<>();
+    private List<Team> teams = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -66,6 +66,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", login='" + login + '\'' +
+                ", teams='" + teams + '\'' +
                 // Avoid printing collections directly to prevent recursion
                 // ", leagues=" + leagues + '\'' +
                 '}';

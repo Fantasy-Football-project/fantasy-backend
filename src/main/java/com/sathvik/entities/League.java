@@ -1,5 +1,6 @@
 package com.sathvik.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,9 +33,13 @@ public class League {
 
     @OneToMany(
             mappedBy = "league",
-            cascade = CascadeType.ALL,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
             orphanRemoval = true
     )
+    @JsonIgnore
     private List<Team> teams = new ArrayList<>();
 
     private int numTeams;
@@ -99,4 +104,9 @@ public class League {
     }
 
     private final int TRADE_REVIEW_PERIOD = 1;
+
+    @Override
+    public String toString() {
+        return "league";
+    }
 }

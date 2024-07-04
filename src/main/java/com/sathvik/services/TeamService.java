@@ -1,6 +1,8 @@
 package com.sathvik.services;
 
 import com.sathvik.dto.CreateTeamDto;
+import com.sathvik.entities.League;
+import com.sathvik.entities.Player;
 import com.sathvik.entities.Team;
 import com.sathvik.entities.User;
 import com.sathvik.exceptions.AppException;
@@ -10,30 +12,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-    /*
-    The purpose of this method is to add a team to a league.
-     */
-    public Team addTeam(CreateTeamDto teamDto) {
-        Team team = new Team();
-
-        team.setTeamName(teamDto.getTeamName());
-        team.setFullName(teamDto.getFullName());
-
-        User user = userRepository.findByLogin(teamDto.getUsername())
+    public Team findTeam(String leagueName, String username) {
+        User user = userRepository.findByLogin(username)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
-        user.getTeams().add(team);
-        User saved = userRepository.save(user);
-        team.setUser(saved);
+        League league = null;
 
-        teamRepository.save(team);
+        for (League l : user.getLeagues()) {
+            if (l.getLeagueName().equals(leagueName)) {
+                league = l;
+            }
+        }
 
-        return team;
+        if (league != null) {
+            for (Team t : league.getTeams()) {
+                if (t.getUser().equals(user)) {
+                    return t;
+                }
+            }
+        }
+
+        return null;
     }
 }
