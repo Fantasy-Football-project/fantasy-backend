@@ -4,6 +4,7 @@ import com.sathvik.dto.CreateLeagueDto;
 import com.sathvik.dto.CreateTeamDto;
 import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
+import com.sathvik.entities.Player;
 import com.sathvik.entities.Team;
 import com.sathvik.entities.User;
 import com.sathvik.exceptions.AppException;
@@ -80,14 +81,37 @@ public class LeagueService {
 
         User user = userRepository.findByLogin(teamDto.getUsername())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-        League league = leagueRepository.findByLeagueName(teamDto.getLeagueName())
-                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        League league;
+        if (teamDto.getLeagueName() != null) {
+            league = leagueRepository.findByLeagueName(teamDto.getLeagueName())
+                    .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+        }
+        else {
+            league = leagueRepository.findByJoinCode(teamDto.getJoinCode())
+                    .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+        }
 
         team.setUser(user);
         team.setLeague(league);
+
         league.getTeams().add(team);
         user.getTeams().add(team);
         teamRepository.save(team);
+    }
+
+    //Don't think this method is necessary but will leave here for now.
+    public void joinLeague(CreateTeamDto teamDto) {
+        User user = userRepository.findByLogin(teamDto.getUsername())
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        League league = leagueRepository.findByJoinCode(teamDto.getJoinCode())
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        user.getLeagues().add(league);
+        User saved = userRepository.save(user);
+        league.getUsers().add(saved);
+
+        addTeam(teamDto);
     }
 
     public List<League> getLeagues(Long userId) {

@@ -105,6 +105,8 @@ public class League {
 
     private final int TRADE_REVIEW_PERIOD = 1;
 
+    private String joinCode = UUID.randomUUID().toString();
+
     @Override
     public String toString() {
         return "league";

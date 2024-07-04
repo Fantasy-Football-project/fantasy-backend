@@ -1,6 +1,7 @@
 package com.sathvik.controllers;
 
 import com.sathvik.dto.CreateLeagueDto;
+import com.sathvik.dto.CreateTeamDto;
 import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
 import com.sathvik.services.LeagueService;
@@ -50,6 +51,13 @@ public class LeagueController {
                 .toUri();
 
         return ResponseEntity.created(location).body(createdLeague);
+    }
+
+    @PutMapping("/join-league")
+    public ResponseEntity<League> joinLeague(@RequestBody CreateTeamDto team) {
+        leagueService.joinLeague(team);
+
+        return ResponseEntity.ok().build();
     }
 
 
