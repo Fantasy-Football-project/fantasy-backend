@@ -27,6 +27,11 @@ public class TeamController {
         player.setFirstName("test");
         player.setLastName("player");
         team.getTeamPlayers().add(player);
+
+        Player player2 = new Player();
+        player.setFirstName("test");
+        player.setLastName("player 2");
+        team.getTeamPlayers().add(player);
         List<Player> players = team.getTeamPlayers();
 
         return ResponseEntity.ok(players);
