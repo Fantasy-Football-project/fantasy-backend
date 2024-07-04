@@ -35,8 +35,6 @@ public class UserAuthProvider {
         if (!isBase64Encoded(secretKey)) {
             secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         }
-        //secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        //secretKey = new String(Base64.getEncoder().encode(secretKey.getBytes()));
     }
 
     private boolean isBase64Encoded(String str) {
@@ -53,8 +51,6 @@ public class UserAuthProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 3600000);
 
-        System.out.println("Creation: Secret Key (Base64 Encoded): " + secretKey);
-
         byte[] decodedSecretKey = Base64.getDecoder().decode(secretKey);
 
         String token = JWT.create()
@@ -63,17 +59,12 @@ public class UserAuthProvider {
                 .withExpiresAt(expiryDate)
                 .sign(Algorithm.HMAC256(decodedSecretKey));
 
-        System.out.println("Token created: " + token);
-
         return token;
     }
 
     //The purpose of this method is to validate the token.
     public UsernamePasswordAuthenticationToken validateToken(String token) {
-        System.out.println("Validating Token: |" + token + "|");
-
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(Base64.getDecoder().decode(secretKey))).build();
-
 
         //To verify the JWT, we first need to decode the token.
         DecodedJWT decodedJWT = verifier.verify(token);

@@ -1,11 +1,14 @@
 package com.sathvik.services;
 
 import com.sathvik.dto.CreateLeagueDto;
+import com.sathvik.dto.CreateTeamDto;
 import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
+import com.sathvik.entities.Team;
 import com.sathvik.entities.User;
 import com.sathvik.exceptions.AppException;
 import com.sathvik.repositories.LeagueRepository;
+import com.sathvik.repositories.TeamRepository;
 import com.sathvik.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,14 +21,22 @@ import java.util.Optional;
 @Service
 public class LeagueService {
     private final LeagueRepository leagueRepository;
-    private final UserService userService;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     /*
     This method has a CreateLeagueDto object as a parameter, which contains the
     basic information needed to create a league. The league is saved into the database.
      */
+
+    //NEED TO MAKE SURE TO DEFAULT OTHER VALUES LATER
     public League createLeague(CreateLeagueDto league) {
+        Optional<League> check = leagueRepository.findByLeagueName(league.getLeagueName());
+        //Condition checks if the league already exists
+        if (check.isPresent()) {
+            throw new AppException("League already exists 2", HttpStatus.BAD_REQUEST);
+        }
+
         League newLeague = new League();
         newLeague.setLeagueName(league.getLeagueName());
         newLeague.setNumTeams(league.getNumTeams());
@@ -38,25 +49,58 @@ public class LeagueService {
 
         user.getLeagues().add(newLeague);
         User saved = userRepository.save(user);
-        //userRepository.save(user);
         newLeague.getUsers().add(saved);
 
-        //userRepository.save(user);
-        leagueRepository.save(newLeague);
+        //Because of the cascade annotation, I only have to save it once, and it'll also
+        //save to the user.
+        userRepository.save(saved);
+
+        System.out.println("hereeee" + newLeague);
+
+        //Logic for adding a new team to the league and user.
+        CreateTeamDto team  = new CreateTeamDto();
+        team.setTeamName(league.getTeamName());
+        team.setFullName(league.getFullName());
+        team.setUsername(league.getUsername());
+        team.setLeagueName(league.getLeagueName());
+
+        addTeam(team);
 
         return newLeague;
     }
 
-    public League getLeagueById(Long id) {
-        return leagueRepository.findById(id)
-                .orElse(null);
+    /*
+    The purpose of this method is to add a team to a league.
+     */
+    public void addTeam(CreateTeamDto teamDto) {
+        Team team = new Team();
+
+        team.setTeamName(teamDto.getTeamName());
+        team.setFullName(teamDto.getFullName());
+
+        User user = userRepository.findByLogin(teamDto.getUsername())
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        League league = leagueRepository.findByLeagueName(teamDto.getLeagueName())
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        team.setUser(user);
+        team.setLeague(league);
+        league.getTeams().add(team);
+        user.getTeams().add(team);
+        teamRepository.save(team);
     }
 
-    public List<League> getAllLeagues(Long userId) {
+    public List<League> getLeagues(Long userId) {
         // return array list of all leagues
         System.out.println(leagueRepository.findByUsers_Id(userId) + "hellooooo");
 
         return leagueRepository.findByUsers_Id(userId); // this works?
         //return leagueRepository.findAll();
+    }
+
+    public List<League> getAllLeagues() {
+        // return array list of all leagues
+
+        return leagueRepository.findAll(); // this works?
     }
 }

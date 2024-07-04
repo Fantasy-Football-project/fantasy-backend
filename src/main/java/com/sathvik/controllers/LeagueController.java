@@ -13,6 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+//Change routing to overall leagues and then add/get. Can keep consistent with future
+//controllers.
 @RequiredArgsConstructor
 @RestController
 public class LeagueController {
@@ -28,7 +30,7 @@ public class LeagueController {
     @GetMapping("/leagues")
     public ResponseEntity<List<League>> getLeagues(@RequestParam String username) {
         Long userId = userService.findByLogin(username).getId();
-        List<League> leagues = leagueService.getAllLeagues(userId);
+        List<League> leagues = leagueService.getLeagues(userId);
 
         //Checking to see if the league exists.
         if (leagues != null) {
@@ -48,5 +50,18 @@ public class LeagueController {
                 .toUri();
 
         return ResponseEntity.created(location).body(createdLeague);
+    }
+
+
+    @GetMapping("/allLeagues")
+    public ResponseEntity<List<League>> getAllLeagues() {
+        List<League> leagues = leagueService.getAllLeagues();
+
+        //Checking to see if the league exists.
+        if (leagues != null) {
+            return ResponseEntity.ok().body(leagues);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
