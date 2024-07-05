@@ -122,6 +122,11 @@ public class LeagueService {
         //return leagueRepository.findAll();
     }
 
+    public League getLeague(String leagueName) {
+        return leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+    }
+
     public List<League> getAllLeagues() {
         // return array list of all leagues
 

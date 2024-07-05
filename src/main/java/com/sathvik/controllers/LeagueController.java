@@ -53,6 +53,11 @@ public class LeagueController {
         return ResponseEntity.created(location).body(createdLeague);
     }
 
+    @GetMapping("/get-league")
+    public ResponseEntity<League> getLeague(@RequestParam String leagueName) {
+        return ResponseEntity.ok().body(leagueService.getLeague(leagueName));
+    }
+
     @PutMapping("/join-league")
     public ResponseEntity<League> joinLeague(@RequestBody CreateTeamDto team) {
         leagueService.joinLeague(team);
