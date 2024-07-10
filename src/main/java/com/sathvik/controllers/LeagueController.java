@@ -4,6 +4,7 @@ import com.sathvik.dto.CreateLeagueDto;
 import com.sathvik.dto.CreateTeamDto;
 import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
+import com.sathvik.entities.Player;
 import com.sathvik.services.LeagueService;
 import com.sathvik.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,11 @@ public class LeagueController {
         leagueService.joinLeague(team);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get-all-players")
+    public ResponseEntity<List<Player>> getAllPlayers(@RequestParam String leagueName) {
+       return ResponseEntity.ok().body(leagueService.getAllPlayers(leagueName));
     }
 
 

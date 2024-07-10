@@ -13,8 +13,5 @@ import java.util.List;
 public class PlayerController {
     private final PlayerService playerService;
 
-    @GetMapping("/get-all-players")
-    public List<Player> getAllPlayers() {
-        return playerService.getAllPlayers();
-    }
+
 }

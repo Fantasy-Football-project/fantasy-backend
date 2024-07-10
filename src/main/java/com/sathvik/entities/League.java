@@ -29,7 +29,7 @@ public class League {
             joinColumns = @JoinColumn(name = "league_id"),
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
-    private Set<Player> players = new HashSet<>();
+    private List<Player> players = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "league",
