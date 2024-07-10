@@ -23,8 +23,7 @@ public class TeamController {
     public ResponseEntity<List<Player>> getPlayers(@RequestParam String leagueName, @RequestParam String username) {
         Team team = teamService.findTeam(leagueName, username);
         Player player = new Player();
-        player.setFirstName("test");
-        player.setLastName("player");
+        player.setFullName("Test Player");
         team.getTeamPlayers().add(player);
 
         List<Player> players = team.getTeamPlayers();

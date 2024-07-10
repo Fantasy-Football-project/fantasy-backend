@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class PlayerDto {
     private String fullName;
     private String team;
-    private String position;
 }
