@@ -35,7 +35,7 @@ public class LeagueService {
         Optional<League> check = leagueRepository.findByLeagueName(league.getLeagueName());
         //Condition checks if the league already exists
         if (check.isPresent()) {
-            throw new AppException("League already exists 2", HttpStatus.BAD_REQUEST);
+            throw new AppException("League already exists", HttpStatus.BAD_REQUEST);
         }
 
         League newLeague = new League();

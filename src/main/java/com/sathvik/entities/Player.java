@@ -21,8 +21,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String firstName;
-    private String lastName;
+    private String fullName;
 
     @ManyToMany(mappedBy = "players")
     private HashSet<League> leagues;
