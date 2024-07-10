@@ -89,7 +89,7 @@ public class LeagueController {
 
     //TESTING METHOD
     @GetMapping("/past-data")
-    public ResponseEntity<List<PastPlayerData>> getPastData() {
-        return ResponseEntity.ok().body(pastPlayerDataService.getAllPastPlayerData());
+    public ResponseEntity<List<PastPlayerData>> getPastData(@RequestParam String playerName) {
+        return ResponseEntity.ok().body(pastPlayerDataService.getPlayerData(playerName));
     }
 }

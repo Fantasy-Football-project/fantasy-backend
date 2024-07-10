@@ -15,4 +15,8 @@ public class PastPlayerDataService {
     public List<PastPlayerData> getAllPastPlayerData() {
         return pastPlayerDataRepository.findAll();
     }
+
+    public List<PastPlayerData> getPlayerData(String playerName) {
+        return pastPlayerDataRepository.findByPlayerName(playerName);
+    }
 }

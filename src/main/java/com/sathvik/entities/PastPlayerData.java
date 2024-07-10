@@ -91,7 +91,7 @@ public class PastPlayerData {
     private String passing_stats_sacks;
 
     @Column(name = "player_name")
-    private String player_name;
+    private String playerName;
 
     @Column(name = "position")
     private String position;
