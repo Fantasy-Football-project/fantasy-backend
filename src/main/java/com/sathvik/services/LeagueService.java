@@ -13,6 +13,9 @@ import com.sathvik.repositories.PlayerRepository;
 import com.sathvik.repositories.TeamRepository;
 import com.sathvik.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -117,12 +120,13 @@ public class LeagueService {
         addTeam(teamDto);
     }
 
-    public List<Player> getAllPlayers(String leagueName) {
+    /*public Page<Player> getAllPlayers(String leagueName, int pageNumber, int pageSize) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
 
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return league.getPlayers();
-    }
+    }*/
 
     public List<League> getLeagues(Long userId) {
         // return array list of all leagues

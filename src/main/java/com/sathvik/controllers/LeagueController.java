@@ -69,12 +69,6 @@ public class LeagueController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get-all-players")
-    public ResponseEntity<List<Player>> getAllPlayers(@RequestParam String leagueName) {
-       return ResponseEntity.ok().body(leagueService.getAllPlayers(leagueName));
-    }
-
-
     @GetMapping("/allLeagues")
     public ResponseEntity<List<League>> getAllLeagues() {
         List<League> leagues = leagueService.getAllLeagues();
@@ -85,11 +79,5 @@ public class LeagueController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    //TESTING METHOD
-    @GetMapping("/past-data")
-    public ResponseEntity<List<PastPlayerData>> getPastData(@RequestParam String playerName) {
-        return ResponseEntity.ok().body(pastPlayerDataService.getPlayerData(playerName));
     }
 }
