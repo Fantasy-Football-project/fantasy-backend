@@ -25,11 +25,19 @@ public class League {
 
     @ManyToMany
     @JoinTable(
-            name = "league_players",
+            name = "availableLeague_players",
             joinColumns = @JoinColumn(name = "league_id"),
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
-    private List<Player> players = new ArrayList<>();
+    private List<Player> availablePlayers = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "takenLeague_players",
+            joinColumns = @JoinColumn(name = "league_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
+    private List<Player> takenPlayers = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "league",

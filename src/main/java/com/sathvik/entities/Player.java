@@ -24,9 +24,13 @@ public class Player {
     @Column(name = "full_name")
     private String fullName;
 
-    @ManyToMany(mappedBy = "players")
+    @ManyToMany(mappedBy = "availablePlayers")
     @Transient
-    private HashSet<League> leagues;
+    private HashSet<League> availableLeagues;
+
+    @ManyToMany(mappedBy = "takenPlayers")
+    @Transient
+    private HashSet<League> takenLeagues;
 
     //could make an enum
     @Transient

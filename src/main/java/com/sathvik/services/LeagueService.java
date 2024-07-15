@@ -49,7 +49,7 @@ public class LeagueService {
         newLeague.setPpr(league.getPpr());
         newLeague.setNonPPR(league.getNonPPR());
         newLeague.setHalfPPR(league.getHalfPPR());
-        newLeague.setPlayers(playerRepository.findAll());
+        newLeague.setAvailablePlayers(playerRepository.findAll());
 
         User user = userRepository.findByLogin(league.getUsername())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
