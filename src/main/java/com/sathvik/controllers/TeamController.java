@@ -22,10 +22,6 @@ public class TeamController {
     @GetMapping("/get-team")
     public ResponseEntity<List<Player>> getPlayers(@RequestParam String leagueName, @RequestParam String username) {
         Team team = teamService.findTeam(leagueName, username);
-        Player player = new Player();
-        player.setFirstName("test");
-        player.setLastName("player");
-        team.getTeamPlayers().add(player);
 
         List<Player> players = team.getTeamPlayers();
 

@@ -4,7 +4,10 @@ import com.sathvik.dto.CreateLeagueDto;
 import com.sathvik.dto.CreateTeamDto;
 import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
+import com.sathvik.entities.PastPlayerData;
+import com.sathvik.entities.Player;
 import com.sathvik.services.LeagueService;
+import com.sathvik.services.PastPlayerDataService;
 import com.sathvik.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ public class LeagueController {
 
     private final LeagueService leagueService;
     private final UserService userService;
+    private final PastPlayerDataService pastPlayerDataService;
 
     /*
     This method is a get method to display the leagues that a user is in. It takes
@@ -64,7 +68,6 @@ public class LeagueController {
 
         return ResponseEntity.ok().build();
     }
-
 
     @GetMapping("/allLeagues")
     public ResponseEntity<List<League>> getAllLeagues() {

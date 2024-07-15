@@ -9,9 +9,13 @@ import com.sathvik.entities.Team;
 import com.sathvik.entities.User;
 import com.sathvik.exceptions.AppException;
 import com.sathvik.repositories.LeagueRepository;
+import com.sathvik.repositories.PlayerRepository;
 import com.sathvik.repositories.TeamRepository;
 import com.sathvik.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,7 @@ public class LeagueService {
     private final LeagueRepository leagueRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
 
     /*
     This method has a CreateLeagueDto object as a parameter, which contains the
@@ -44,6 +49,7 @@ public class LeagueService {
         newLeague.setPpr(league.getPpr());
         newLeague.setNonPPR(league.getNonPPR());
         newLeague.setHalfPPR(league.getHalfPPR());
+        newLeague.setPlayers(playerRepository.findAll());
 
         User user = userRepository.findByLogin(league.getUsername())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
@@ -113,6 +119,14 @@ public class LeagueService {
 
         addTeam(teamDto);
     }
+
+    /*public Page<Player> getAllPlayers(String leagueName, int pageNumber, int pageSize) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return league.getPlayers();
+    }*/
 
     public List<League> getLeagues(Long userId) {
         // return array list of all leagues
