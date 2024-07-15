@@ -20,14 +20,18 @@ public class PlayerController {
     private final PastPlayerDataService pastPlayerDataService;
 
     @GetMapping("/get-all-players")
-    public ResponseEntity<Page<Player>> getAllPlayers(@RequestParam(defaultValue = "0") int pageNumber,
-                                                      @RequestParam(defaultValue = "10") int pageSize) {
+    public ResponseEntity<Page<Player>> getAllPlayers(@RequestParam int pageNumber,
+                                                      @RequestParam int pageSize) {
         return ResponseEntity.ok().body(playerService.getAllPlayers(pageNumber, pageSize));
     }
 
-    //TESTING METHOD
     @GetMapping("/past-data")
     public ResponseEntity<List<PastPlayerData>> getPastData(@RequestParam String playerName) {
         return ResponseEntity.ok().body(pastPlayerDataService.getPlayerData(playerName));
+    }
+
+    @GetMapping("/past-data-team")
+    public ResponseEntity<List<PastPlayerData>> getDSTPastData(@RequestParam String teamName) {
+        return ResponseEntity.ok().body(pastPlayerDataService.getDSTData(teamName));
     }
 }

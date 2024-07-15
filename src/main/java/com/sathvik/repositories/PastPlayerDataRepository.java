@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PastPlayerDataRepository extends JpaRepository<PastPlayerData, Long> {
     List<PastPlayerData> findByPlayerName(String playerName);
+
+    List<PastPlayerData> findByTeamName(String teamName);
 }

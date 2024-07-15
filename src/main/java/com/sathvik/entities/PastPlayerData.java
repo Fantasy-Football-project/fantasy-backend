@@ -19,7 +19,7 @@ public class PastPlayerData {
     private Long id;
 
     @Column(name = "dst_team")
-    private String DST_Team;
+    private String teamName;
 
     @Column(name = "defensive_stats_sacks")
     private String defensive_stats_sacks;

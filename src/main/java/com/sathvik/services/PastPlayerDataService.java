@@ -19,4 +19,8 @@ public class PastPlayerDataService {
     public List<PastPlayerData> getPlayerData(String playerName) {
         return pastPlayerDataRepository.findByPlayerName(playerName);
     }
+
+    public List<PastPlayerData> getDSTData(String teamName) {
+        return pastPlayerDataRepository.findByTeamName(teamName);
+    }
 }
