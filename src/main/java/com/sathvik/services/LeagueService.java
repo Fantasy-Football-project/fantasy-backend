@@ -2,7 +2,6 @@ package com.sathvik.services;
 
 import com.sathvik.dto.CreateLeagueDto;
 import com.sathvik.dto.CreateTeamDto;
-import com.sathvik.dto.UserDto;
 import com.sathvik.entities.League;
 import com.sathvik.entities.Player;
 import com.sathvik.entities.Team;
@@ -13,12 +12,10 @@ import com.sathvik.repositories.PlayerRepository;
 import com.sathvik.repositories.TeamRepository;
 import com.sathvik.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,5 +142,43 @@ public class LeagueService {
         // return array list of all leagues
 
         return leagueRepository.findAll(); // this works?
+    }
+
+    public void deleteLeague(String leagueName) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+        List<User> users = league.getUsers();
+
+        for (User user : users) {
+            user.getLeagues().remove(league);
+            userRepository.save(user);
+        }
+
+        List<Team> teams = league.getTeams();
+
+        for (Team team : teams) {
+            User user = team.getUser();
+            user.getTeams().remove(team);
+            userRepository.save(user);
+        }
+
+        List<Player> players = playerRepository.findAll();
+
+        for (Player player : players) {
+            if (player.getAvailableLeagues() != null) {
+                player.getAvailableLeagues().remove(league);
+            }
+
+            if (player.getTakenLeagues() != null) {
+                player.getTakenLeagues().remove(league);
+            }
+
+            playerRepository.save(player);
+        }
+
+
+        teamRepository.deleteAll(teams);
+
+        leagueRepository.delete(league);
     }
 }

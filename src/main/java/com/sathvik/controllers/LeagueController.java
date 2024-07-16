@@ -80,4 +80,10 @@ public class LeagueController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/delete-league")
+    public ResponseEntity<League> deleteLeague(@RequestParam String leagueName) {
+        leagueService.deleteLeague(leagueName);
+        return ResponseEntity.ok().build();
+    }
 }
