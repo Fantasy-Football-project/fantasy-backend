@@ -39,6 +39,15 @@ public class League {
     )
     private List<Player> takenPlayers = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "draft_pick_assigning",
+            joinColumns = {@JoinColumn(name = "league_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "team_id", referencedColumnName = "id")}
+    )
+    @MapKeyColumn(name = "draft_position")
+    private Map<Integer, Team> draftOrder = new HashMap<>();
+
     @OneToMany(
             mappedBy = "league",
             cascade = {
