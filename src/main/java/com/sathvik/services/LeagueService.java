@@ -97,6 +97,13 @@ public class LeagueService {
                     .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
         }
 
+        if (league.getTeams().isEmpty()) {
+            team.setCommissioner(true);
+        }
+        else {
+            team.setCommissioner(false);
+        }
+
         team.setUser(user);
         team.setLeague(league);
         team.setFirstRoundPick(0);

@@ -55,4 +55,8 @@ public class Team {
 
     private double pointsFor;
     private double pointsAgainst;
+
+    @Column(name = "commissioner", nullable = false)
+    private Boolean commissioner;
+
 }
