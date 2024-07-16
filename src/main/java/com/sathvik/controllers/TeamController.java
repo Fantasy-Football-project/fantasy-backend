@@ -19,13 +19,19 @@ public class TeamController {
     private final TeamService teamService;
     private final UserService userService;
 
-    @GetMapping("/get-team")
+    @GetMapping("/get-roster")
     public ResponseEntity<List<Player>> getPlayers(@RequestParam String leagueName, @RequestParam String username) {
         Team team = teamService.findTeam(leagueName, username);
 
         List<Player> players = team.getTeamPlayers();
 
         return ResponseEntity.ok(players);
+    }
 
+    @GetMapping("/get-team")
+    public ResponseEntity<Team> getTeam(@RequestParam String leagueName, @RequestParam String username) {
+        Team team = teamService.findTeam(leagueName, username);
+
+        return ResponseEntity.ok(team);
     }
 }
