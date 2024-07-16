@@ -1,6 +1,7 @@
 package com.sathvik.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,6 +47,9 @@ public class Team {
             inverseJoinColumns = @JoinColumn(name = "player_id")
     )
     private List<Player> teamPlayers;
+
+    @Column(name = "first_round_pick", nullable = false)
+    private Integer firstRoundPick;
 
     private Date mostRecentTransaction;
 
