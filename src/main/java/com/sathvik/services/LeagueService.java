@@ -14,6 +14,7 @@ import com.sathvik.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +34,7 @@ public class LeagueService {
      */
 
     //NEED TO MAKE SURE TO DEFAULT OTHER VALUES LATER
+    @Transactional
     public League createLeague(CreateLeagueDto league) {
         Optional<League> check = leagueRepository.findByLeagueName(league.getLeagueName());
         //Condition checks if the league already exists
@@ -97,7 +99,7 @@ public class LeagueService {
 
         team.setUser(user);
         team.setLeague(league);
-
+        team.setFirstRoundPick(0);
         league.getTeams().add(team);
         user.getTeams().add(team);
         teamRepository.save(team);
@@ -144,6 +146,7 @@ public class LeagueService {
         return leagueRepository.findAll(); // this works?
     }
 
+    @Transactional
     public void deleteLeague(String leagueName) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
@@ -175,7 +178,6 @@ public class LeagueService {
 
             playerRepository.save(player);
         }
-
 
         teamRepository.deleteAll(teams);
 
