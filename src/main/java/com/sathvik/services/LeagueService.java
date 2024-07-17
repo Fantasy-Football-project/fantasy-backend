@@ -50,6 +50,14 @@ public class LeagueService {
         newLeague.setHalfPPR(league.getHalfPPR());
         newLeague.setAvailablePlayers(playerRepository.findAll());
 
+        //Adjusting the position limits for the league (default values).
+        newLeague.getNumberOfStarters().put(League.Position.QB, 1);
+        newLeague.getNumberOfStarters().put(League.Position.RB, 2);
+        newLeague.getNumberOfStarters().put(League.Position.WR, 2);
+        newLeague.getNumberOfStarters().put(League.Position.TE, 1);
+        newLeague.getNumberOfStarters().put(League.Position.K, 1);
+        newLeague.getNumberOfStarters().put(League.Position.DST, 1);
+
         User user = userRepository.findByLogin(league.getUsername())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
