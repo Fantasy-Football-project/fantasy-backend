@@ -26,6 +26,11 @@ public class DraftService {
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
 
         league.getDraftOrder().clear();
+
+        for (Team team : league.getTeams()) {
+            team.getAllPicks().clear();
+        }
+
         leagueRepository.save(league);
     }
 
@@ -45,6 +50,7 @@ public class DraftService {
         Collections.shuffle(draftPicks, new Random(System.currentTimeMillis()));
 
         clearOrder(leagueName);
+        int totalPicks = league.getRosterSize() * numTeams;
 
         int count = 0;
         for (Team team : league.getTeams()) {
@@ -53,11 +59,31 @@ public class DraftService {
                 throw new AppException("Team name cannot be null", HttpStatus.BAD_REQUEST);
             }
             team.setFirstRoundPick(draftPicks.get(count));
+            team.setSecondRoundPick((numTeams * 2) - draftPicks.get(count) + 1);
             league.getDraftOrder().put(draftPicks.get(count), team);
+            team.getAllPicks().add(draftPicks.get(count));
+            team.getAllPicks().add((numTeams * 2) - draftPicks.get(count) + 1);
+            int prevOne = team.getFirstRoundPick();
+            int prevTwo = team.getSecondRoundPick();
+
+            while (prevOne + (numTeams * 2) <= totalPicks) {
+                prevOne = prevOne + (numTeams * 2);
+                team.getAllPicks().add(prevOne);
+                league.getDraftOrder().put(prevOne, team);
+            }
+
+            while (prevTwo + (numTeams * 2) <= totalPicks) {
+                prevTwo = prevTwo + (numTeams * 2);
+                team.getAllPicks().add(prevTwo);
+                league.getDraftOrder().put(prevTwo, team);
+            }
+
             count++;
 
             teamRepository.save(team);
         }
+
+
 
         leagueRepository.save(league);
         return league.getDraftOrder();

@@ -48,6 +48,10 @@ public class League {
     @MapKeyColumn(name = "draft_position")
     private Map<Integer, Team> draftOrder = new HashMap<>();
 
+    private Date draftDate;
+
+    private Boolean draftDone = false;
+
     @OneToMany(
             mappedBy = "league",
             cascade = {
@@ -64,7 +68,8 @@ public class League {
     @ManyToMany(mappedBy = "leagues")
     private List<User> users = new ArrayList<>();
 
-    private enum Position {
+    //Can we keep public?
+    public enum Position {
         QB,
         RB,
         WR,
@@ -76,8 +81,9 @@ public class League {
         IR
     }
 
-    private int rosterSize;
+    private int rosterSize = 15;
 
+    //Let's worry about this later.
     @ElementCollection
     private Map<Position, Integer> maxForPosition = new HashMap<>();
 

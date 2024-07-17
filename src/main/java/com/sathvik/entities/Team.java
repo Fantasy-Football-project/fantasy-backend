@@ -5,6 +5,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,11 @@ public class Team {
 
     @Column(name = "first_round_pick", nullable = false)
     private Integer firstRoundPick;
+
+    private Integer secondRoundPick = 0;
+
+    @ElementCollection
+    private List<Integer> allPicks = new ArrayList<>();
 
     private Date mostRecentTransaction;
 
