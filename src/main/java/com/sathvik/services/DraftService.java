@@ -8,12 +8,8 @@ import com.sathvik.repositories.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -21,7 +17,18 @@ public class DraftService {
     private final LeagueRepository leagueRepository;
     private final TeamRepository teamRepository;
 
-    public void clearOrder(String leagueName) {
+    // The purpose of this method is to set the draft date.
+    public void setDraftDate(String leagueName,
+                             Date draftDate) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        league.setDraftDate(draftDate);
+        leagueRepository.save(league);
+    }
+
+    // This is a helper method to clear the draft order everytime it is randomized.
+    private void clearOrder(String leagueName) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
 
@@ -34,7 +41,10 @@ public class DraftService {
         leagueRepository.save(league);
     }
 
-
+    // The purpose of this method is to randomize the draft order. It randomizes the first
+    // round pick for each team (based on the number of teams in each league. The rest of the
+    // picks in the draft are assigned in the style of a snake draft, based on the first round
+    // pick the team has.
     public Map<Integer, Team> randomize(String leagueName) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
@@ -83,9 +93,9 @@ public class DraftService {
             teamRepository.save(team);
         }
 
-
-
         leagueRepository.save(league);
         return league.getDraftOrder();
     }
+
+
 }

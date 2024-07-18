@@ -49,6 +49,8 @@ public class LeagueService {
         newLeague.setNonPPR(league.getNonPPR());
         newLeague.setHalfPPR(league.getHalfPPR());
         newLeague.setAvailablePlayers(playerRepository.findAll());
+        newLeague.setDraftStart(false);
+        newLeague.setDraftDone(false);
 
         //Adjusting the position limits for the league (default values).
         newLeague.getNumberOfStarters().put(League.Position.QB, 1);
