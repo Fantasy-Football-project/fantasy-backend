@@ -50,6 +50,10 @@ public class League {
 
     private Date draftDate;
 
+    private Integer currentPick = 1;
+
+    private Boolean draftStart = false;
+
     private Boolean draftDone = false;
 
     @OneToMany(
