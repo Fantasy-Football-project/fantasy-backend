@@ -86,4 +86,9 @@ public class LeagueController {
         leagueService.deleteLeague(leagueName);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/all-available-players")
+    public ResponseEntity<List<Player>> getAllAvailablePlayers(String leagueName) {
+        return ResponseEntity.ok(leagueService.getAllAvailablePlayers(leagueName));
+    }
 }

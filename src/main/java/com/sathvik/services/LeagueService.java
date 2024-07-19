@@ -12,6 +12,9 @@ import com.sathvik.repositories.PlayerRepository;
 import com.sathvik.repositories.TeamRepository;
 import com.sathvik.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +54,7 @@ public class LeagueService {
         newLeague.setAvailablePlayers(playerRepository.findAll());
         newLeague.setDraftStart(false);
         newLeague.setDraftDone(false);
+        newLeague.setCurrentPick(1);
 
         //Adjusting the position limits for the league (default values).
         newLeague.getNumberOfStarters().put(League.Position.QB, 1);
@@ -136,14 +140,6 @@ public class LeagueService {
         addTeam(teamDto);
     }
 
-    /*public Page<Player> getAllPlayers(String leagueName, int pageNumber, int pageSize) {
-        League league = leagueRepository.findByLeagueName(leagueName)
-                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return league.getPlayers();
-    }*/
-
     public List<League> getLeagues(Long userId) {
         // return array list of all leagues
         System.out.println(leagueRepository.findByUsers_Id(userId) + "hellooooo");
@@ -199,5 +195,13 @@ public class LeagueService {
         teamRepository.deleteAll(teams);
 
         leagueRepository.delete(league);
+    }
+
+    public List<Player> getAllAvailablePlayers(String leagueName) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        return league.getAvailablePlayers();
+
     }
 }

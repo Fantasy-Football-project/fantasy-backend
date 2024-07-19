@@ -8,6 +8,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -49,10 +50,11 @@ public class Team {
     )
     private List<Player> teamPlayers;
 
-    @Column(name = "first_round_pick", nullable = false)
     private Integer firstRoundPick;
 
     private Integer secondRoundPick = 0;
+
+    private Boolean isDraftTurn = false;
 
     @ElementCollection
     private List<Integer> allPicks = new ArrayList<>();
@@ -64,5 +66,29 @@ public class Team {
 
     @Column(name = "commissioner", nullable = false)
     private Boolean commissioner;
+
+    @Override
+    public String toString() {
+        return "Team [id=" + id + ", teamName=" + teamName + ", fullName=" + fullName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        else if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        else {
+            Team other = (Team) obj;
+            return id == other.id;
+        }
+    }
 
 }

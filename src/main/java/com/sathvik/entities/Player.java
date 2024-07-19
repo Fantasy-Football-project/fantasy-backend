@@ -1,5 +1,6 @@
 package com.sathvik.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,13 +26,14 @@ public class Player {
     @Column(name = "full_name")
     private String fullName;
 
+    //Maybe need transient notation on this and takenLeagues?
     @ManyToMany(mappedBy = "availablePlayers")
-    @Transient
-    private HashSet<League> availableLeagues;
+    @JsonIgnore
+    private Set<League> availableLeagues = new HashSet<>();
 
     @ManyToMany(mappedBy = "takenPlayers")
-    @Transient
-    private HashSet<League> takenLeagues;
+    @JsonIgnore
+    private Set<League> takenLeagues = new HashSet<>();
 
     //could make an enum
     @Transient

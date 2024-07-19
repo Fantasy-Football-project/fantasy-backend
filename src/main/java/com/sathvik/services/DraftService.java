@@ -1,14 +1,20 @@
 package com.sathvik.services;
 
 import com.sathvik.entities.League;
+import com.sathvik.entities.Player;
 import com.sathvik.entities.Team;
 import com.sathvik.exceptions.AppException;
 import com.sathvik.repositories.LeagueRepository;
+import com.sathvik.repositories.PlayerRepository;
 import com.sathvik.repositories.TeamRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -16,6 +22,7 @@ import java.util.*;
 public class DraftService {
     private final LeagueRepository leagueRepository;
     private final TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
 
     // The purpose of this method is to set the draft date.
     public void setDraftDate(String leagueName,
@@ -23,8 +30,10 @@ public class DraftService {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
 
-        league.setDraftDate(draftDate);
-        leagueRepository.save(league);
+        if (!league.getDraftOrder().isEmpty()) {
+            league.setDraftDate(draftDate);
+            leagueRepository.save(league);
+        }
     }
 
     // This is a helper method to clear the draft order everytime it is randomized.
@@ -45,6 +54,7 @@ public class DraftService {
     // round pick for each team (based on the number of teams in each league. The rest of the
     // picks in the draft are assigned in the style of a snake draft, based on the first round
     // pick the team has.
+    @Transactional
     public Map<Integer, Team> randomize(String leagueName) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
@@ -71,17 +81,20 @@ public class DraftService {
             team.setFirstRoundPick(draftPicks.get(count));
             team.setSecondRoundPick((numTeams * 2) - draftPicks.get(count) + 1);
             league.getDraftOrder().put(draftPicks.get(count), team);
+            league.getDraftOrder().put((numTeams * 2) - draftPicks.get(count) + 1, team);
             team.getAllPicks().add(draftPicks.get(count));
             team.getAllPicks().add((numTeams * 2) - draftPicks.get(count) + 1);
             int prevOne = team.getFirstRoundPick();
             int prevTwo = team.getSecondRoundPick();
 
+            // This loop sets all the odd round picks for the team.
             while (prevOne + (numTeams * 2) <= totalPicks) {
                 prevOne = prevOne + (numTeams * 2);
                 team.getAllPicks().add(prevOne);
                 league.getDraftOrder().put(prevOne, team);
             }
 
+            // This loop sets all the even round picks for the team.
             while (prevTwo + (numTeams * 2) <= totalPicks) {
                 prevTwo = prevTwo + (numTeams * 2);
                 team.getAllPicks().add(prevTwo);
@@ -97,5 +110,78 @@ public class DraftService {
         return league.getDraftOrder();
     }
 
+    // This method checks if the draft for every league has started, based on the draft date.
+    // If the draft is ready to start, the startDraft method is called.
+    public void checkDraftStarts() {
+        System.out.print("hello workinggg??");
+        LocalDateTime currentDate = LocalDateTime.now();
+        List<League> leagues = leagueRepository.findAll();
 
+        for (League league : leagues) {
+            if (league.getDraftDone() != null && league.getDraftStart() != null &&
+                    !league.getDraftDone() && !league.getDraftStart()) {
+                Date draftDate = league.getDraftDate();
+                LocalDateTime draftDateTime = convertToLocalDateTimeViaInstant(draftDate);
+
+                if (draftDateTime.isEqual(currentDate) || draftDateTime.isBefore(currentDate)) {
+                    System.out.println("draft start");
+                    league.setDraftStart(true);
+                    leagueRepository.save(league);
+                    startDraft(league);
+                }
+            }
+        }
+    }
+
+    private LocalDateTime convertToLocalDateTimeViaInstant(Date draftDate) {
+        return draftDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    private void startDraft(League league) {
+        System.out.println("draft order is here:: " + league.getDraftOrder());
+        Team team = league.getDraftOrder().get(league.getCurrentPick());
+        System.out.println("team is here: " + team.getTeamName());
+        team.setIsDraftTurn(true);
+        teamRepository.save(team);
+    }
+
+    public List<Player> draftPlayer(String leagueName, String teamName, String playerName) {
+        Player player = playerRepository.findByFullName(playerName)
+                .orElseThrow(() -> new AppException("Unknown player", HttpStatus.NOT_FOUND));
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        Team team = null;
+
+
+        for (Team t : league.getTeams()) {
+            if (t.getTeamName().equals(teamName)) {
+                team = t;
+            }
+        }
+
+        team.getTeamPlayers().add(player);
+
+        league.getTakenPlayers().add(player);
+        league.getAvailablePlayers().remove(player);
+
+        player.getAvailableLeagues().remove(league);
+        player.getTakenLeagues().add(league);
+
+        team.setIsDraftTurn(false);
+
+        league.getDraftOrder().remove(league.getCurrentPick());
+        league.setCurrentPick(league.getCurrentPick() + 1);
+
+        leagueRepository.save(league);
+        teamRepository.save(team);
+
+        if (!league.getDraftOrder().isEmpty()) {
+            startDraft(league);
+        }
+
+        return league.getAvailablePlayers();
+    }
 }

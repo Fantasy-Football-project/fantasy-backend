@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.Name;
 import java.util.*;
@@ -39,7 +41,8 @@ public class League {
     )
     private List<Player> takenPlayers = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    //FetchType.EAGER is bad practice. Be careful with it, think about removing.
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "draft_pick_assigning",
             joinColumns = {@JoinColumn(name = "league_id", referencedColumnName = "id")},
@@ -50,11 +53,11 @@ public class League {
 
     private Date draftDate;
 
-    private Integer currentPick = 1;
+    private Integer currentPick;
 
-    private Boolean draftStart = false;
+    private Boolean draftStart;
 
-    private Boolean draftDone = false;
+    private Boolean draftDone;
 
     @OneToMany(
             mappedBy = "league",
@@ -137,5 +140,24 @@ public class League {
     @Override
     public String toString() {
         return "league";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        else if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        else {
+            League other = (League) obj;
+            return id == other.id;
+        }
     }
 }
