@@ -1,6 +1,7 @@
 package com.sathvik.controllers;
 
 import com.sathvik.entities.League;
+import com.sathvik.entities.Player;
 import com.sathvik.entities.Team;
 import com.sathvik.services.DraftService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -29,5 +31,13 @@ public class DraftController {
              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date draftDate) {
         draftService.setDraftDate(leagueName, draftDate);
         return ResponseEntity.ok(draftDate);
+    }
+
+    @PutMapping("/draft-player")
+    public ResponseEntity<List<Player>> draftPlayer(@RequestParam String leagueName,
+              @RequestParam String teamName, @RequestParam String playerName) {
+        List<Player> players = draftService.draftPlayer(leagueName, teamName, playerName);
+
+        return ResponseEntity.ok(players);
     }
 }
