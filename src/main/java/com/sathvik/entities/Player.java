@@ -35,6 +35,10 @@ public class Player {
     @JsonIgnore
     private Set<League> takenLeagues = new HashSet<>();
 
+    @ManyToMany(mappedBy = "queueList")
+    @JsonIgnore
+    private List<Team> queueTeams = new ArrayList<>();
+
     //could make an enum
     @Transient
     private String NFLTeam;

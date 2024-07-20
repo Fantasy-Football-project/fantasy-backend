@@ -40,4 +40,20 @@ public class DraftController {
 
         return ResponseEntity.ok(players);
     }
+
+    @PutMapping("/queue-player")
+    public ResponseEntity<List<Player>> queuePlayer(@RequestParam String leagueName,
+                                                    @RequestParam String teamName, @RequestParam String playerName) {
+        List<Player> players = draftService.queuePlayer(leagueName, teamName, playerName);
+
+        return ResponseEntity.ok(players);
+    }
+
+    @PutMapping("/remove-queue")
+    public ResponseEntity<List<Player>> removeQueue(@RequestParam String leagueName,
+                                                    @RequestParam String teamName, @RequestParam String playerName) {
+        List<Player> players = draftService.removeQueue(leagueName, teamName, playerName);
+
+        return ResponseEntity.ok(players);
+    }
 }

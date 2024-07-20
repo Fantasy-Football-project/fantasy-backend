@@ -30,9 +30,17 @@ public class DraftService {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
 
-        if (!league.getDraftOrder().isEmpty()) {
+        if (!league.getDraftOrder().isEmpty() && league.getTeams().size() == league.getNumTeams()) {
             league.setDraftDate(draftDate);
             leagueRepository.save(league);
+        }
+        else {
+            if (league.getDraftOrder().isEmpty()) {
+                throw new AppException("Draft order not set.", HttpStatus.NOT_FOUND);
+            }
+            else {
+                throw new AppException("Not enough teams in the league.", HttpStatus.NOT_FOUND);
+            }
         }
     }
 
@@ -184,4 +192,54 @@ public class DraftService {
 
         return league.getAvailablePlayers();
     }
+
+    public List<Player> queuePlayer(String leagueName, String teamName, String playerName) {
+        Player player = playerRepository.findByFullName(playerName)
+                .orElseThrow(() -> new AppException("Unknown player", HttpStatus.NOT_FOUND));
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        Team team = null;
+
+        for (Team t : league.getTeams()) {
+            if (t.getTeamName().equals(teamName)) {
+                team = t;
+            }
+        }
+
+        assert team != null;
+        if (!team.getQueueList().contains(player)) {
+            team.getQueueList().add(player);
+            player.getQueueTeams().add(team);
+        }
+
+        teamRepository.save(team);
+
+        return team.getQueueList();
+    }
+
+    public List<Player> removeQueue(String leagueName, String teamName, String playerName) {
+        Player player = playerRepository.findByFullName(playerName)
+                .orElseThrow(() -> new AppException("Unknown player", HttpStatus.NOT_FOUND));
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        Team team = null;
+
+        for (Team t : league.getTeams()) {
+            if (t.getTeamName().equals(teamName)) {
+                team = t;
+            }
+        }
+
+        assert team != null;
+        team.getQueueList().remove(player);
+        player.getQueueTeams().remove(team);
+
+        teamRepository.save(team);
+
+        return team.getQueueList();
+    }
 }
+
+// https://prod.liveshare.vsengsaas.visualstudio.com/join?F7012F9D5927F9874EF447352AAA54FA2397

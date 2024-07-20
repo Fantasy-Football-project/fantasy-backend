@@ -59,12 +59,22 @@ public class Team {
     @ElementCollection
     private List<Integer> allPicks = new ArrayList<>();
 
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "queue_list",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
+    private List<Player> queueList = new ArrayList<>();
+
     private Date mostRecentTransaction;
 
     private double pointsFor;
     private double pointsAgainst;
 
-    @Column(name = "commissioner", nullable = false)
     private Boolean commissioner;
 
     @Override
