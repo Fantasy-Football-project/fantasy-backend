@@ -88,7 +88,7 @@ public class League {
         IR
     }
 
-    private int rosterSize = 15;
+    private int rosterSize;
 
     //Let's worry about this later.
     @ElementCollection

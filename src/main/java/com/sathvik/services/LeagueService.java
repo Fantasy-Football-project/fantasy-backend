@@ -55,6 +55,7 @@ public class LeagueService {
         newLeague.setDraftStart(false);
         newLeague.setDraftDone(false);
         newLeague.setCurrentPick(1);
+        newLeague.setRosterSize(15);
 
         //Adjusting the position limits for the league (default values).
         newLeague.getNumberOfStarters().put(League.Position.QB, 1);
