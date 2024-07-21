@@ -190,6 +190,10 @@ public class DraftService {
             startDraft(league);
         }
 
+        for (Team t : league.getTeams()) {
+            removeQueue(leagueName, t.getTeamName(), playerName);
+        }
+
         return league.getAvailablePlayers();
     }
 
@@ -233,10 +237,13 @@ public class DraftService {
         }
 
         assert team != null;
-        team.getQueueList().remove(player);
-        player.getQueueTeams().remove(team);
 
-        teamRepository.save(team);
+        if (team.getQueueList().contains(player)) {
+            team.getQueueList().remove(player);
+            player.getQueueTeams().remove(team);
+
+            teamRepository.save(team);
+        }
 
         return team.getQueueList();
     }
