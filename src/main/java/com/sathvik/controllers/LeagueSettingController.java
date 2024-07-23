@@ -12,11 +12,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LeagueSettingController {
     private final LeagueSettingService leagueSettingService;
-
-    @PutMapping("/edit-roster-size")
-    public ResponseEntity<League> editRosterSize(@RequestParam String leagueName, @RequestParam int rosterSize) {
-        League league = leagueSettingService.adjustRosterSize(leagueName, rosterSize);
-
-        return ResponseEntity.ok().body(league);
-    }
 }

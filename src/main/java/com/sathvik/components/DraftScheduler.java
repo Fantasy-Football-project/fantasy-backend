@@ -11,6 +11,7 @@ public class DraftScheduler {
 
     private final DraftService draftService;
 
+    //Change to hourly later.
     @Scheduled(cron = "0 * * * * *")
     public void draftStartCheck() {
         System.out.println("Draft Check started");
