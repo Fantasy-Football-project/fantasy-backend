@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.sathvik.entities.League.Position.*;
+
 @RequiredArgsConstructor
 @Service
 public class DraftService {
@@ -171,6 +173,70 @@ public class DraftService {
         }
 
         team.getTeamPlayers().add(player);
+
+        if (player.getPosition().equals("QB")) {
+            if (team.getStartingQB().size() < league.getNumberOfStarters().get(QB)) {
+                team.getStartingQB().add(player);
+            }
+            else {
+                team.getBench().add(player);
+            }
+        }
+        else if (player.getPosition().equals("RB")) {
+            if (team.getStartingRB().size() < league.getNumberOfStarters().get(RB)) {
+                team.getStartingRB().add(player);
+            }
+            else if (team.getStartingFLEX().size() < league.getNumberOfStarters().get(FLEX)){
+                team.getStartingFLEX().add(player);
+            }
+            else {
+                team.getBench().add(player);
+            }
+        }
+        else if (player.getPosition().equals("WR")) {
+            if (team.getStartingWR().size() < league.getNumberOfStarters().get(WR)) {
+                team.getStartingWR().add(player);
+            }
+            else if (team.getStartingFLEX().size() < league.getNumberOfStarters().get(FLEX)){
+                team.getStartingFLEX().add(player);
+            }
+            else {
+                team.getBench().add(player);
+            }
+        }
+        else if (player.getPosition().equals("TE")) {
+            if (team.getStartingTE().size() < league.getNumberOfStarters().get(TE)) {
+                team.getStartingTE().add(player);
+            }
+            else if (team.getStartingFLEX().size() < league.getNumberOfStarters().get(FLEX)){
+                team.getStartingFLEX().add(player);
+            }
+            else {
+                team.getBench().add(player);
+            }
+        }
+        else if (player.getPosition().equals("K")) {
+            if (team.getStartingK().size() < league.getNumberOfStarters().get(K)) {
+                team.getStartingK().add(player);
+            }
+            else if (team.getStartingFLEX().size() < league.getNumberOfStarters().get(FLEX)){
+                team.getStartingFLEX().add(player);
+            }
+            else {
+                team.getBench().add(player);
+            }
+        }
+        else if (player.getPosition().equals("DST")) {
+            if (team.getStartingDST().size() < league.getNumberOfStarters().get(DST)) {
+                team.getStartingDST().add(player);
+            }
+            else if (team.getStartingFLEX().size() < league.getNumberOfStarters().get(FLEX)){
+                team.getStartingFLEX().add(player);
+            }
+            else {
+                team.getBench().add(player);
+            }
+        }
 
         league.getTakenPlayers().add(player);
         league.getAvailablePlayers().remove(player);
