@@ -16,14 +16,15 @@ public class RosterController {
     private final RosterService rosterService;
 
     @GetMapping("/find-allowed-swaps")
-    public ResponseEntity<List<Player>> findAllowedSwaps(String leagueName, String username, Long playerId) {
-        return ResponseEntity.ok(rosterService.editLineupAllowed(leagueName, username, playerId));
+    public ResponseEntity<List<Player>> findAllowedSwaps(String leagueName, String username,
+                                                         Long playerId, String position) {
+        return ResponseEntity.ok(rosterService.editLineupAllowed(leagueName, username, playerId, position));
     }
 
     @PutMapping("/swap-lineup")
     public ResponseEntity<Player> swapLineup(String leagueName, String username,
-                                             Long playerIdOne, Long playerIdTwo) {
-        rosterService.editLineupSwap(leagueName, username, playerIdOne, playerIdTwo);
+                                             Long playerIdOne, Long playerIdTwo, String position) {
+        rosterService.editLineupSwap(leagueName, username, playerIdOne, playerIdTwo, position);
         return ResponseEntity.ok().build();
     }
 }

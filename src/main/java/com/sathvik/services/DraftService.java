@@ -255,10 +255,16 @@ public class DraftService {
         if (!league.getDraftOrder().isEmpty()) {
             startDraft(league);
         }
+        else {
+            league.setDraftDone(true);
+        }
 
         for (Team t : league.getTeams()) {
             removeQueue(leagueName, t.getTeamName(), playerName);
         }
+
+        leagueRepository.save(league);
+        teamRepository.save(team);
 
         return league.getAvailablePlayers();
     }
