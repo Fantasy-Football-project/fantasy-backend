@@ -22,66 +22,108 @@ public class RosterService {
 
     // The purpose of this method is to adjust the starting lineup of a fantasy roster. This
     // method specifically returns the list of players that the selected player can be swapped with.
-    public List<Player> editLineupAllowed (String leagueName, String username, Long playerId) {
+    public List<Player> editLineupAllowed (String leagueName, String username, Long playerId,
+                                           String position) {
         Team team = teamService.findTeam(leagueName, username);
-        Player player = playerRepository.findById(playerId)
-                .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
-
         List<Player> result = new ArrayList<>();
 
-        if (player.getPosition().equals("QB")) {
-            if (!team.getBench().contains(player)) {
-                for (Player p : team.getBench()) {
-                    if (player.getPosition().equals(p.getPosition())) {
-                        result.add(p);
-                    }
-                }
-            }
-            if (!team.getStartingQB().contains(player)) {
-                result.addAll(team.getStartingQB());
-            }
-        }
-        else if (player.getPosition().equals("RB")) {
-            editLineupAllowedHelper(team, player, result);
-            if (!team.getStartingRB().contains(player)) {
-                result.addAll(team.getStartingRB());
-            }
-        }
-        else if (player.getPosition().equals("WR")) {
-            editLineupAllowedHelper(team, player, result);
-            if (!team.getStartingWR().contains(player)) {
-                result.addAll(team.getStartingWR());
-            }
-        }
-        else if (player.getPosition().equals("TE")) {
-            editLineupAllowedHelper(team, player, result);
-            if (!team.getStartingTE().contains(player)) {
-                result.addAll(team.getStartingTE());
-            }
-        }
-        else if (player.getPosition().equals("K")) {
-            if (!team.getBench().contains(player)) {
-                for (Player p : team.getBench()) {
-                    if (player.getPosition().equals(p.getPosition())) {
-                        result.add(p);
-                    }
-                }
-            }
-            if (!team.getStartingK().contains(player)) {
-                result.addAll(team.getStartingK());
-            }
+        if (playerId != null) {
+            Player player = playerRepository.findById(playerId)
+                    .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
 
+            if (player.getPosition().equals("QB")) {
+                if (!team.getBench().contains(player)) {
+                    for (Player p : team.getBench()) {
+                        if (player.getPosition().equals(p.getPosition())) {
+                            result.add(p);
+                        }
+                    }
+                }
+                if (!team.getStartingQB().contains(player)) {
+                    result.addAll(team.getStartingQB());
+                }
+            } else if (player.getPosition().equals("RB")) {
+                editLineupAllowedHelper(team, player, result);
+                if (!team.getStartingRB().contains(player)) {
+                    result.addAll(team.getStartingRB());
+                }
+            } else if (player.getPosition().equals("WR")) {
+                editLineupAllowedHelper(team, player, result);
+                if (!team.getStartingWR().contains(player)) {
+                    result.addAll(team.getStartingWR());
+                }
+            } else if (player.getPosition().equals("TE")) {
+                editLineupAllowedHelper(team, player, result);
+                if (!team.getStartingTE().contains(player)) {
+                    result.addAll(team.getStartingTE());
+                }
+            } else if (player.getPosition().equals("K")) {
+                if (!team.getBench().contains(player)) {
+                    for (Player p : team.getBench()) {
+                        if (player.getPosition().equals(p.getPosition())) {
+                            result.add(p);
+                        }
+                    }
+                }
+                if (!team.getStartingK().contains(player)) {
+                    result.addAll(team.getStartingK());
+                }
+
+            } else if (player.getPosition().equals("DST")) {
+                if (!team.getBench().contains(player)) {
+                    for (Player p : team.getBench()) {
+                        if (player.getPosition().equals(p.getPosition())) {
+                            result.add(p);
+                        }
+                    }
+                }
+                if (!team.getStartingDST().contains(player)) {
+                    result.addAll(team.getStartingDST());
+                }
+            }
         }
-        else if (player.getPosition().equals("DST")) {
-            if (!team.getBench().contains(player)) {
+        else {
+            if (position.equals("QB")) {
                 for (Player p : team.getBench()) {
-                    if (player.getPosition().equals(p.getPosition())) {
+                    if (p.getPosition().equals("QB")) {
                         result.add(p);
                     }
                 }
             }
-            if (!team.getStartingDST().contains(player)) {
-                result.addAll(team.getStartingDST());
+            else if (position.equals("RB")) {
+                for (Player p : team.getTeamPlayers()) {
+                    if (p.getPosition().equals("RB")) {
+                        result.add(p);
+                    }
+                }
+            }
+            else if (position.equals("WR")) {
+                for (Player p : team.getTeamPlayers()) {
+                    if (p.getPosition().equals("WR")) {
+                        result.add(p);
+                    }
+                }
+            }
+            else if (position.equals("TE")) {
+                for (Player p : team.getTeamPlayers()) {
+                    if (p.getPosition().equals("TE")) {
+                        result.add(p);
+                    }
+                }
+            }
+            else if (position.equals("K")) {
+                for (Player p : team.getBench()) {
+                    if (p.getPosition().equals("K")) {
+                        result.add(p);
+                    }
+                }
+            }
+            else if (position.equals("DST")) {
+                for (Player p : team.getBench()) {
+                    if (p.getPosition().equals("DST")) {
+                        result.add(p);
+                    }
+                }
             }
         }
 
@@ -102,43 +144,109 @@ public class RosterService {
     }
 
     public void editLineupSwap (String leagueName, String username, Long playerIdOne,
-                                  Long playerIdTwo) {
+                                  Long playerIdTwo, String position) {
         Team team = teamService.findTeam(leagueName, username);
-        Player playerOne = playerRepository.findById(playerIdOne)
-                .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
-        Player playerTwo = playerRepository.findById(playerIdTwo)
-                .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
+        if (playerIdOne != null) {
+            Player playerOne = playerRepository.findById(playerIdOne)
+                    .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
+            Player playerTwo = playerRepository.findById(playerIdTwo)
+                    .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
 
-        if (playerOne.getPosition().equals(playerTwo.getPosition())) {
-            // Checking QB swap.
-            if (playerOne.getPosition().equals("QB")) {
-                swapQB(team, playerOne, playerTwo);
-            }
-            // Checking all possible RB swaps.
-            else if (playerOne.getPosition().equals("RB")) {
-                swapRB(team, playerOne, playerTwo);
-            }
-            // Checking all possible WR swaps.
-            else if (playerOne.getPosition().equals("WR")) {
-                swapWR(team, playerOne, playerTwo);
-            }
-            // Checking all possible TE swaps.
-            else if (playerOne.getPosition().equals("TE")) {
-                swapTE(team, playerOne, playerTwo);
-            }
-            else if (playerOne.getPosition().equals("K")) {
-                swapK(team, playerOne, playerTwo);
-            }
-            else if (playerOne.getPosition().equals("DST")) {
-                swapDST(team, playerOne, playerTwo);
+            if (playerOne.getPosition().equals(playerTwo.getPosition())) {
+                // Checking QB swap.
+                if (playerOne.getPosition().equals("QB")) {
+                    swapQB(team, playerOne, playerTwo);
+                }
+                // Checking all possible RB swaps.
+                else if (playerOne.getPosition().equals("RB")) {
+                    swapRB(team, playerOne, playerTwo);
+                }
+                // Checking all possible WR swaps.
+                else if (playerOne.getPosition().equals("WR")) {
+                    swapWR(team, playerOne, playerTwo);
+                }
+                // Checking all possible TE swaps.
+                else if (playerOne.getPosition().equals("TE")) {
+                    swapTE(team, playerOne, playerTwo);
+                } else if (playerOne.getPosition().equals("K")) {
+                    swapK(team, playerOne, playerTwo);
+                } else if (playerOne.getPosition().equals("DST")) {
+                    swapDST(team, playerOne, playerTwo);
+                }
+            } else {
+                if (team.getStartingFLEX().contains(playerOne)) {
+                    flexHelperTwo(team, playerTwo, playerOne);
+                } else {
+                    flexHelperTwo(team, playerOne, playerTwo);
+                }
             }
         }
         else {
-            if (team.getStartingFLEX().contains(playerOne)) {
-                flexHelperTwo(team, playerTwo, playerOne);
+            Player playerTwo = playerRepository.findById(playerIdTwo)
+                    .orElseThrow(() -> new AppException("Unknown Player", HttpStatus.NOT_FOUND));
+            if (position.equals("QB")) {
+                team.getBench().remove(playerTwo);
+                team.getStartingQB().add(playerTwo);
             }
-            else {
-                flexHelperTwo(team, playerOne, playerTwo);
+            else if (position.equals("RB")) {
+                if (team.getBench().contains(playerTwo)) {
+                    team.getBench().remove(playerTwo);
+                    team.getStartingRB().add(playerTwo);
+                }
+                else if (team.getStartingFLEX().contains(playerTwo)) {
+                    team.getStartingRB().add(playerTwo);
+                    team.getStartingFLEX().remove(playerTwo);
+                }
+            }
+            else if (position.equals("WR")) {
+                if (team.getBench().contains(playerTwo)) {
+                    team.getBench().remove(playerTwo);
+                    team.getStartingWR().add(playerTwo);
+                }
+                else if (team.getStartingFLEX().contains(playerTwo)) {
+                    team.getStartingFLEX().remove(playerTwo);
+                    team.getStartingWR().add(playerTwo);
+                }
+            }
+            else if (position.equals("TE")) {
+                if (team.getBench().contains(playerTwo)) {
+                    team.getBench().remove(playerTwo);
+                    team.getStartingTE().add(playerTwo);
+                }
+                else if (team.getStartingFLEX().contains(playerTwo)) {
+                    team.getStartingFLEX().remove(playerTwo);
+                    team.getStartingTE().add(playerTwo);
+                }
+            }
+            else if (position.equals("FLEX")) {
+                if (team.getBench().contains(playerTwo)) {
+                    team.getBench().remove(playerTwo);
+                    team.getStartingFLEX().add(playerTwo);
+                }
+                else if (team.getStartingRB().contains(playerTwo)) {
+                    team.getStartingRB().remove(playerTwo);
+                    team.getStartingFLEX().add(playerTwo);
+                }
+                else if (team.getStartingWR().contains(playerTwo)) {
+                    team.getStartingWR().remove(playerTwo);
+                    team.getStartingFLEX().add(playerTwo);
+                }
+                else if (team.getStartingTE().contains(playerTwo)) {
+                    team.getStartingTE().remove(playerTwo);
+                    team.getStartingFLEX().add(playerTwo);
+                }
+            }
+            else if (position.equals("K")) {
+                if (team.getBench().contains(playerTwo)) {
+                    team.getBench().remove(playerTwo);
+                    team.getStartingK().add(playerTwo);
+                }
+            }
+            else if (position.equals("DST")) {
+                if (team.getBench().contains(playerTwo)) {
+                    team.getBench().remove(playerTwo);
+                    team.getStartingDST().add(playerTwo);
+                }
             }
         }
 
