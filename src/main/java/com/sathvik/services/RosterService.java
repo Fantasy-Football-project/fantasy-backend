@@ -83,45 +83,56 @@ public class RosterService {
             }
         }
         else {
-            if (position.equals("QB")) {
-                for (Player p : team.getBench()) {
-                    if (p.getPosition().equals("QB")) {
-                        result.add(p);
+            switch (position) {
+                case "QB" -> {
+                    for (Player p : team.getBench()) {
+                        if (p.getPosition().equals("QB")) {
+                            result.add(p);
+                        }
                     }
                 }
-            }
-            else if (position.equals("RB")) {
-                for (Player p : team.getTeamPlayers()) {
-                    if (p.getPosition().equals("RB")) {
-                        result.add(p);
+                case "RB" -> {
+                    for (Player p : team.getTeamPlayers()) {
+                        if (p.getPosition().equals("RB")) {
+                            result.add(p);
+                        }
                     }
                 }
-            }
-            else if (position.equals("WR")) {
-                for (Player p : team.getTeamPlayers()) {
-                    if (p.getPosition().equals("WR")) {
-                        result.add(p);
+                case "WR" -> {
+                    for (Player p : team.getTeamPlayers()) {
+                        if (p.getPosition().equals("WR")) {
+                            result.add(p);
+                        }
                     }
                 }
-            }
-            else if (position.equals("TE")) {
-                for (Player p : team.getTeamPlayers()) {
-                    if (p.getPosition().equals("TE")) {
-                        result.add(p);
+                case "TE" -> {
+                    for (Player p : team.getTeamPlayers()) {
+                        if (p.getPosition().equals("TE")) {
+                            result.add(p);
+                        }
                     }
                 }
-            }
-            else if (position.equals("K")) {
-                for (Player p : team.getBench()) {
-                    if (p.getPosition().equals("K")) {
-                        result.add(p);
+                case "FLEX" -> {
+                    for (Player p : team.getTeamPlayers()) {
+                        if (p.getPosition().equals("RB") || p.getPosition().equals("WR")
+                                || p.getPosition().equals("TE")) {
+
+                            result.add(p);
+                        }
                     }
                 }
-            }
-            else if (position.equals("DST")) {
-                for (Player p : team.getBench()) {
-                    if (p.getPosition().equals("DST")) {
-                        result.add(p);
+                case "K" -> {
+                    for (Player p : team.getBench()) {
+                        if (p.getPosition().equals("K")) {
+                            result.add(p);
+                        }
+                    }
+                }
+                case "DST" -> {
+                    for (Player p : team.getBench()) {
+                        if (p.getPosition().equals("DST")) {
+                            result.add(p);
+                        }
                     }
                 }
             }

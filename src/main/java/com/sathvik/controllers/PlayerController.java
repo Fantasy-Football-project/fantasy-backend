@@ -25,6 +25,12 @@ public class PlayerController {
         return ResponseEntity.ok().body(playerService.getAllPlayers(pageNumber, pageSize));
     }
 
+    @GetMapping("/get-all-available-players")
+    public ResponseEntity<Page<Player>> getAllAvailablePlayers(@RequestParam String leagueName,
+           @RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok().body(playerService.getAllAvailablePlayers(leagueName, pageNumber, pageSize));
+    }
+
     @GetMapping("/past-data")
     public ResponseEntity<List<PastPlayerData>> getPastData(@RequestParam String playerName) {
         return ResponseEntity.ok().body(pastPlayerDataService.getPlayerData(playerName));

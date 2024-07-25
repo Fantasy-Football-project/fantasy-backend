@@ -247,6 +247,8 @@ public class DraftService {
         team.setIsDraftTurn(false);
 
         league.getDraftOrder().remove(league.getCurrentPick());
+        league.getRecentActivity().add("Pick #" + league.getCurrentPick() +
+                ": Team: " + teamName + " drafts " + playerName);
         league.setCurrentPick(league.getCurrentPick() + 1);
 
         leagueRepository.save(league);
