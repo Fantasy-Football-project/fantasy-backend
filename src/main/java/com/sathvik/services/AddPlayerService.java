@@ -71,8 +71,8 @@ public class AddPlayerService {
         playerRepository.save(playerToAdd);
         teamRepository.save(team);
 
-        league.getRecentActivity().add("Team: " + team.getTeamName() + " adds Player: "
-                + playerToAdd.getFullName() + "  and drops Player: " + playerToDrop.getFullName());
+        league.getRecentActivity().add("Team: " + team.getTeamName() + " adds Player: " +
+                playerToAdd.getFullName());
 
         return playerToAdd;
     }
@@ -103,6 +103,9 @@ public class AddPlayerService {
         leagueRepository.save(league);
         playerRepository.save(playerToDrop);
         teamRepository.save(team);
+
+        league.getRecentActivity().add("Team: " + team.getTeamName() + " drops Player: " +
+                playerToDrop.getFullName());
 
         return playerToDrop;
     }
