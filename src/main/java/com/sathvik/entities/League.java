@@ -137,6 +137,9 @@ public class League {
 
     private String joinCode = UUID.randomUUID().toString();
 
+    @ElementCollection
+    private List<String> recentActivity = new ArrayList<>();
+
     @Override
     public String toString() {
         return "league";
