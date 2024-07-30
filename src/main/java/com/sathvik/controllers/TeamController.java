@@ -34,4 +34,11 @@ public class TeamController {
 
         return ResponseEntity.ok(team);
     }
+
+    @GetMapping("/get-team-by-id")
+    public ResponseEntity<Team> getTeam(@RequestParam Long teamId) {
+        Team team = teamService.findTeam(teamId);
+
+        return ResponseEntity.ok(team);
+    }
 }

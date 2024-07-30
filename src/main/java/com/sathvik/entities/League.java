@@ -67,7 +67,7 @@ public class League {
             },
             orphanRemoval = true
     )
-    @JsonIgnore
+    //@JsonIgnore //IDK IF IM ALLOWED TO REMOVE THIS BUT I AM FOR NOW
     private List<Team> teams = new ArrayList<>();
 
     private int numTeams;
@@ -108,6 +108,14 @@ public class League {
     private int playoffTeams;
     private int playoffGameLength;
     private int regularSeasonGames;
+
+    @OneToMany
+    @JoinTable(
+            name = "leagues_trade_requests",
+            joinColumns = {@JoinColumn(name = "league_id")},
+            inverseJoinColumns = {@JoinColumn(name = "trade_request_id")}
+    )
+    private Set<TradeRequest> tradeRequests = new HashSet<>();
 
     private enum tradeDeadline {
         NOV25,

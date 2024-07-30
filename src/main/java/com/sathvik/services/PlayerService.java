@@ -37,4 +37,8 @@ public class PlayerService {
 
         return new PageImpl<>(availablePlayers, pageable, availablePlayers.size());
     }
+
+    public Optional<Player> getPlayerById(Long playerId) {
+        return playerRepository.findById(playerId);
+    }
 }

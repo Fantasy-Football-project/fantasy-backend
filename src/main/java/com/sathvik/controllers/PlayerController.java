@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,5 +40,10 @@ public class PlayerController {
     @GetMapping("/past-data-team")
     public ResponseEntity<List<PastPlayerData>> getDSTPastData(@RequestParam String teamName) {
         return ResponseEntity.ok().body(pastPlayerDataService.getDSTData(teamName));
+    }
+
+    @GetMapping("/get-player-by-id")
+    public ResponseEntity<Optional<Player>> getPlayerById(@RequestParam Long id) {
+        return ResponseEntity.ok().body(playerService.getPlayerById(id));
     }
 }
