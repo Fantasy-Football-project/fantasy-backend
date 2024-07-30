@@ -42,4 +42,9 @@ public class TeamService {
 
         return null;
     }
+
+    public Team findTeam(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new AppException("Team not found", HttpStatus.NOT_FOUND));
+    }
 }
