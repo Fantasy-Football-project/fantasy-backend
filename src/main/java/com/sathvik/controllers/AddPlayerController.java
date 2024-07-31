@@ -16,13 +16,13 @@ public class AddPlayerController {
     @PutMapping("/add-player")
     public ResponseEntity<Player> addPlayer(@RequestParam String leagueName,
                 @RequestParam String username, @RequestParam Long playerIdAdd) {
-        return ResponseEntity.ok(addPlayerService.addPlayer(leagueName, username, playerIdAdd));
+        return ResponseEntity.ok(addPlayerService.addPlayer(leagueName, username, playerIdAdd, false));
     }
 
     @PutMapping("/drop-player")
     public ResponseEntity<Player> dropPlayer(@RequestParam String leagueName,
                                             @RequestParam String username, @RequestParam Long playerIdDrop) {
-        return ResponseEntity.ok(addPlayerService.dropPlayer(leagueName, username, playerIdDrop));
+        return ResponseEntity.ok(addPlayerService.dropPlayer(leagueName, username, playerIdDrop, false));
     }
 
     @PutMapping("/add-and-drop-players")

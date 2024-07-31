@@ -66,6 +66,42 @@ public class TradeService {
         return playersFromTeamOne;
     }
 
+    public void acceptTrade(String leagueName, Long tradeRequestId) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new IllegalArgumentException("League not found"));
+        TradeRequest req = tradeRequestRepository.findById(tradeRequestId)
+                .orElseThrow(() -> new IllegalArgumentException("Trade request not found"));
+        Team teamOne = req.getTeamRequesting();
+        Team teamTwo = req.getTeamPending();
+        List<Player> playersFromTeamOne = req.getFromTeamRequesting();
+        List<Player> playersFromTeamTwo = req.getFromTeamPending();
+        StringBuilder activity = new StringBuilder("TRADE: From " + teamOne.getTeamName() + ": ");
+
+        for (Player player : playersFromTeamOne) {
+            addPlayerService.dropPlayer(leagueName, teamOne.getUser().getLogin(), player.getId(), true);
+            activity.append(player.getFullName()).append(", ");
+        }
+
+        activity.append("\n From ").append(teamTwo.getTeamName()).append(": ");
+        for (Player player : playersFromTeamTwo) {
+            addPlayerService.dropPlayer(leagueName, teamTwo.getUser().getLogin(), player.getId(), true);
+            activity.append(player.getFullName()).append(", ");
+        }
+
+        for (Player player : playersFromTeamOne) {
+            addPlayerService.addPlayer(leagueName, teamTwo.getUser().getLogin(), player.getId(), true);
+        }
+
+        for (Player player : playersFromTeamTwo) {
+            addPlayerService.addPlayer(leagueName, teamOne.getUser().getLogin(), player.getId(), true);
+        }
+
+        league.getRecentActivity().add(activity.toString());
+
+        leagueRepository.save(league);
+        teamRepository.save(teamOne);
+    }
+
     public List<TradeRequest> getOutgoingTrades(String leagueName, Long teamId) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new IllegalArgumentException("League not found"));

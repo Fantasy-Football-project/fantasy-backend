@@ -9,6 +9,8 @@ import com.sathvik.repositories.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @RequiredArgsConstructor
 @Service
 public class AddPlayerService {
@@ -21,7 +23,7 @@ public class AddPlayerService {
     // the team adding the player has at least one extra roster spot available. Therefore, there
     // are no checks for this. A different method will be used to add and drop players if the roster
     // does not have the space to add someone.
-    public Player addPlayer(String leagueName, String username, Long playerId) {
+    public Player addPlayer(String leagueName, String username, Long playerId, Boolean fromTrade) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new IllegalArgumentException("League not found"));
         Player player = playerRepository.findById(playerId)
@@ -37,10 +39,14 @@ public class AddPlayerService {
 
         teamRepository.save(team);
         playerRepository.save(player);
-        leagueRepository.save(league);
 
-        league.getRecentActivity().add("Team: " + team.getTeamName() + " adds Player: "
-                + player.getFullName());
+        Date date = new Date();
+
+        if (!fromTrade) {
+            league.getRecentActivity().add(date + ": Team: " + team.getTeamName() + " adds Player: "
+                    + player.getFullName());
+        }
+        leagueRepository.save(league);
 
         return player;
     }
@@ -55,7 +61,7 @@ public class AddPlayerService {
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
         Team team = teamService.findTeam(leagueName, username);
 
-        dropPlayer(leagueName, username, playerIdDrop);
+        dropPlayer(leagueName, username, playerIdDrop, false);
         team.getTeamPlayers().add(playerToAdd);
         team.getBench().add(playerToAdd);
 
@@ -67,17 +73,20 @@ public class AddPlayerService {
         playerToDrop.getTakenLeagues().remove(league);
         playerToDrop.getAvailableLeagues().add(league);
 
-        leagueRepository.save(league);
         playerRepository.save(playerToAdd);
         teamRepository.save(team);
 
-        league.getRecentActivity().add("Team: " + team.getTeamName() + " adds Player: " +
+        Date date = new Date();
+
+        league.getRecentActivity().add(date + ": Team: " + team.getTeamName() + " adds Player: " +
                 playerToAdd.getFullName());
+
+        leagueRepository.save(league);
 
         return playerToAdd;
     }
 
-    public Player dropPlayer(String leagueName, String username, Long playerIdDrop) {
+    public Player dropPlayer(String leagueName, String username, Long playerIdDrop, Boolean fromTrade) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new IllegalArgumentException("League not found"));
         Player playerToDrop = playerRepository.findById(playerIdDrop)
@@ -104,8 +113,12 @@ public class AddPlayerService {
         playerRepository.save(playerToDrop);
         teamRepository.save(team);
 
-        league.getRecentActivity().add("Team: " + team.getTeamName() + " drops Player: " +
-                playerToDrop.getFullName());
+        Date date = new Date();
+
+        if (!fromTrade) {
+            league.getRecentActivity().add(date + ": Team: " + team.getTeamName() + " drops Player: " +
+                    playerToDrop.getFullName());
+        }
 
         return playerToDrop;
     }

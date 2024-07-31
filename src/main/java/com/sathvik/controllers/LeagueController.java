@@ -91,4 +91,9 @@ public class LeagueController {
     public ResponseEntity<List<Player>> getAllAvailablePlayers(String leagueName) {
         return ResponseEntity.ok(leagueService.getAllAvailablePlayers(leagueName));
     }
+
+    @GetMapping("/recent-activity")
+    public ResponseEntity<List<String>> getRecentActivity(@RequestParam String leagueName) {
+        return ResponseEntity.ok(leagueService.getRecentActivity(leagueName));
+    }
 }
