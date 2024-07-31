@@ -10,6 +10,7 @@ import com.sathvik.repositories.TeamRepository;
 import com.sathvik.repositories.TradeRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class TradeService {
         return playersFromTeamOne;
     }
 
+    @Transactional
     public void acceptTrade(String leagueName, Long tradeRequestId) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new IllegalArgumentException("League not found"));
@@ -97,6 +99,9 @@ public class TradeService {
         }
 
         league.getRecentActivity().add(activity.toString());
+
+        tradeRequestRepository.delete(req);
+        league.getTradeRequests().remove(req);
 
         leagueRepository.save(league);
         teamRepository.save(teamOne);
