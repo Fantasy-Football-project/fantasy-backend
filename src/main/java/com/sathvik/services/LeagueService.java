@@ -205,6 +205,13 @@ public class LeagueService {
                 .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
 
         return league.getAvailablePlayers();
+    }
 
+    // This method gets the recent activity of the league (including adds, drops, trades, etc).
+    public List<String> getRecentActivity(String leagueName) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new AppException("Unknown league", HttpStatus.NOT_FOUND));
+
+        return league.getRecentActivity();
     }
 }

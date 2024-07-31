@@ -30,6 +30,12 @@ public class TradeController {
         return ResponseEntity.ok().body(tradeService.getOutgoingTrades(leagueName, teamId));
     }
 
+    @GetMapping("/view-incoming-requests")
+    public ResponseEntity<List<TradeRequest>> viewIncomingRequests(@RequestParam String leagueName,
+                                                                   @RequestParam Long teamId) {
+        return ResponseEntity.ok().body(tradeService.getIncomingTrades(leagueName, teamId));
+    }
+
     @PutMapping("/cancel-trade-request")
     public void cancelTradeRequest(@RequestParam String leagueName, @RequestParam Long tradeRequestId) {
         tradeService.cancelTradeRequest(leagueName, tradeRequestId);

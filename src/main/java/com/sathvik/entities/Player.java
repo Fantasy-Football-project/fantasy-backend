@@ -58,9 +58,10 @@ public class Player {
     private ArrayList<Integer> pastScores;
     //gives error not exactly sure. might need an entity for scores - not anymore
 
-    @ManyToMany(mappedBy = "teamPlayers")
+    //Not sure we need this.
+    /*@ManyToMany(mappedBy = "teamPlayers")
     @Transient
-    private List<Team> fantasyTeams;
+    private List<Team> fantasyTeams;*/
 
     @Override
     public String toString() {
