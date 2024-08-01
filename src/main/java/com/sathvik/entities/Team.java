@@ -155,6 +155,9 @@ public class Team {
     )
     private List<Player> queueList = new ArrayList<>();
 
+    @OneToMany
+    private Map<Integer, Team> opponent = new HashMap<>();
+
     private Date mostRecentTransaction;
 
     private double pointsFor;

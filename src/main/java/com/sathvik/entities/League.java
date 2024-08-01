@@ -1,15 +1,11 @@
 package com.sathvik.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.Name;
 import java.util.*;
 
 @AllArgsConstructor
@@ -103,11 +99,21 @@ public class League {
 
     //INSERT SCORING LATER
 
-    //IMPLEMENT DRAFT SETTINGS
-
     private int playoffTeams;
     private int playoffGameLength;
     private int regularSeasonGames;
+
+    // This field is for the schedule of the league. The integer represents the week,
+    // and the WeekMatchups represents all the matches for that week.
+    @OneToMany(cascade = CascadeType.ALL) //.ALL can be used on the one to many side, as deleting this field
+    // would remove all the matches for the league which is fine.
+    @JoinTable(
+            name = "league_matchups",
+            joinColumns = {@JoinColumn(name = "league_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "week_matchup_id", referencedColumnName = "id")}
+    )
+    @MapKeyColumn(name = "week_number")
+    private Map<Integer, WeekMatchups> matchups = new HashMap<>();
 
     @OneToMany
     @JoinTable(
