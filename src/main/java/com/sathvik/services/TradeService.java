@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,7 +78,8 @@ public class TradeService {
         Team teamTwo = req.getTeamPending();
         List<Player> playersFromTeamOne = req.getFromTeamRequesting();
         List<Player> playersFromTeamTwo = req.getFromTeamPending();
-        StringBuilder activity = new StringBuilder("TRADE: From " + teamOne.getTeamName() + ": ");
+        Date date = new Date();
+        StringBuilder activity = new StringBuilder(date + ": \nTRADE: From " + teamOne.getTeamName() + ": ");
 
         for (Player player : playersFromTeamOne) {
             addPlayerService.dropPlayer(leagueName, teamOne.getUser().getLogin(), player.getId(), true);
