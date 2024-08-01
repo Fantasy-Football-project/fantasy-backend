@@ -66,6 +66,7 @@ public class LeagueService {
         newLeague.getNumberOfStarters().put(League.Position.K, 1);
         newLeague.getNumberOfStarters().put(League.Position.DST, 1);
         newLeague.getNumberOfStarters().put(League.Position.BE, 7);
+        newLeague.setRegularSeasonGames(14);
 
         User user = userRepository.findByLogin(league.getUsername())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
