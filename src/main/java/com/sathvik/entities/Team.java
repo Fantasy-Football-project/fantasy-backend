@@ -1,6 +1,8 @@
 package com.sathvik.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +17,9 @@ import java.util.*;
 @Builder
 @Entity
 @Table(name = "fantasy_teams")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 public class Team {
 
     @Id
@@ -156,6 +161,12 @@ public class Team {
     private List<Player> queueList = new ArrayList<>();
 
     @OneToMany
+    @JoinTable(
+            name = "opponents",
+            joinColumns = {@JoinColumn(name = "team_id")},
+            inverseJoinColumns = {@JoinColumn(name = "other_team_id")}
+    )
+    @JsonIgnore
     private Map<Integer, Team> opponent = new HashMap<>();
 
     private Date mostRecentTransaction;

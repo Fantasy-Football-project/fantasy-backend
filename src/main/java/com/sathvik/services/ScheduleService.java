@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +22,8 @@ public class ScheduleService {
     public void randomizeSchedule(String leagueName) {
         League league = leagueRepository.findByLeagueName(leagueName)
                 .orElseThrow(() -> new RuntimeException("League not found"));
+
+        league.getMatchups().clear();
 
         int regularSeasonMatches = league.getRegularSeasonGames();
         List<Team> teams = league.getTeams();
@@ -61,5 +60,12 @@ public class ScheduleService {
         }
 
         leagueRepository.save(league);
+    }
+
+    public Map<Integer, WeekMatchups> getAllMatchups(String leagueName) {
+        League league = leagueRepository.findByLeagueName(leagueName)
+                .orElseThrow(() -> new RuntimeException("League not found"));
+
+        return league.getMatchups();
     }
 }

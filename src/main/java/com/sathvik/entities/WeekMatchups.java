@@ -1,5 +1,6 @@
 package com.sathvik.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,7 @@ public class WeekMatchups {
             joinColumns = {@JoinColumn(name = "week_matchup_id")},
             inverseJoinColumns = {@JoinColumn(name = "team_id")}
     )
+    @JsonIgnore
     private List<Team> teamsListA = new ArrayList<>();
 
     @OneToMany
@@ -37,5 +39,6 @@ public class WeekMatchups {
             joinColumns = {@JoinColumn(name = "week_matchup_id")},
             inverseJoinColumns = {@JoinColumn(name = "team_id")}
     )
+    @JsonIgnore
     private List<Team> teamsListB = new ArrayList<>();
 }
