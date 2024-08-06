@@ -33,10 +33,11 @@ public class ScheduleService {
             toBeShuffled.add(i);
         }
 
+        Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < regularSeasonMatches; i++) {
             WeekMatchups week = new WeekMatchups();
 
-            Collections.shuffle(toBeShuffled, new Random(System.currentTimeMillis()));
+            Collections.shuffle(toBeShuffled, random);
 
             for (int j = 0; j < toBeShuffled.size() / 2; j++) {
                 week.getTeamsListA().add(teams.get(toBeShuffled.get(j)));
@@ -67,5 +68,14 @@ public class ScheduleService {
                 .orElseThrow(() -> new RuntimeException("League not found"));
 
         return league.getMatchups();
+    }
+
+    // The purpose of this method is to return all the opponents of a team, since we used the
+    // @JSONIgnore annotation to prevent infinite recursion.
+    public Map<Integer, Team> getOpponents(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+
+        return team.getOpponent();
     }
 }

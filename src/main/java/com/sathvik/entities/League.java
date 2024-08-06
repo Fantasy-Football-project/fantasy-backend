@@ -103,6 +103,8 @@ public class League {
     private int playoffGameLength;
     private int regularSeasonGames;
 
+    private Integer currentWeekNumber = 1;
+
     // This field is for the schedule of the league. The integer represents the week,
     // and the WeekMatchups represents all the matches for that week.
     @OneToMany(cascade = CascadeType.ALL) //.ALL can be used on the one to many side, as deleting this field

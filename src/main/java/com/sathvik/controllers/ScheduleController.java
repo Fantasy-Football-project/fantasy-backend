@@ -1,5 +1,6 @@
 package com.sathvik.controllers;
 
+import com.sathvik.entities.Team;
 import com.sathvik.entities.WeekMatchups;
 import com.sathvik.services.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,10 @@ public class ScheduleController {
     @PutMapping("/randomize-league-matchups")
     public void randomizeMatchups(@RequestParam String leagueName) {
         scheduleService.randomizeSchedule(leagueName);
+    }
+
+    @GetMapping("/get-opponents-for-team")
+    public ResponseEntity<Map<Integer, Team>> getOpponentByTeam(@RequestParam Long teamId) {
+        return ResponseEntity.ok(scheduleService.getOpponents(teamId));
     }
 }

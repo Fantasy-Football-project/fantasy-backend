@@ -30,7 +30,6 @@ public class WeekMatchups {
             joinColumns = {@JoinColumn(name = "week_matchup_id")},
             inverseJoinColumns = {@JoinColumn(name = "team_id")}
     )
-    @JsonIgnore
     private List<Team> teamsListA = new ArrayList<>();
 
     @OneToMany
@@ -39,6 +38,5 @@ public class WeekMatchups {
             joinColumns = {@JoinColumn(name = "week_matchup_id")},
             inverseJoinColumns = {@JoinColumn(name = "team_id")}
     )
-    @JsonIgnore
     private List<Team> teamsListB = new ArrayList<>();
 }
