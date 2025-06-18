@@ -144,9 +144,14 @@ public class DraftService {
     }
 
     private LocalDateTime convertToLocalDateTimeViaInstant(Date draftDate) {
-        return draftDate.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+        if (draftDate != null) {
+            return draftDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+        }
+        else {
+            return null;
+        }
     }
 
     private void startDraft(League league) {

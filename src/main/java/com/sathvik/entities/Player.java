@@ -20,7 +20,6 @@ import java.util.Set;
 @Table(name = "players")
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "full_name")

@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login", "/register", "/validateToken").permitAll() //The end points that do not require authentication
+                        .requestMatchers("/login", "/register", "/validateToken", "/api/players/import").permitAll() //The end points that do not require authentication
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

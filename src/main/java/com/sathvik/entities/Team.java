@@ -166,6 +166,7 @@ public class Team {
             joinColumns = {@JoinColumn(name = "team_id")},
             inverseJoinColumns = {@JoinColumn(name = "other_team_id")}
     )
+//    @MapKeyColumn(name = "week_number")
     @JsonIgnore
     private Map<Integer, Team> opponent = new HashMap<>();
 
@@ -173,6 +174,15 @@ public class Team {
 
     private double pointsFor;
     private double pointsAgainst;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "team_week_scores",
+            joinColumns = @JoinColumn(name = "team_id")
+    )
+    @MapKeyColumn(name = "week_number") // Week Number
+    @Column(name = "points_scored") // Points Scored that week
+    private Map<Integer, Double> scoreByWeek = new HashMap<>();
 
     private Boolean commissioner;
 

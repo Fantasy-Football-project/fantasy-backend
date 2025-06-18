@@ -33,6 +33,11 @@ public class ScheduleService {
             toBeShuffled.add(i);
         }
 
+        for (Team team : teams) {
+            team.getOpponent().clear();
+            teamRepository.save(team);
+        }
+
         Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < regularSeasonMatches; i++) {
             WeekMatchups week = new WeekMatchups();

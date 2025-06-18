@@ -9,4 +9,5 @@ import java.util.Set;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     Optional<Player> findByFullName(String fullName);
 
+    Optional<Player> findById(long id);
 }

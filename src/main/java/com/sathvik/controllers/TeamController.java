@@ -30,6 +30,7 @@ public class TeamController {
 
     @GetMapping("/get-team")
     public ResponseEntity<Team> getTeam(@RequestParam String leagueName, @RequestParam String username) {
+
         Team team = teamService.findTeam(leagueName, username);
 
         return ResponseEntity.ok(team);

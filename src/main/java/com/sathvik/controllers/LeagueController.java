@@ -35,6 +35,7 @@ public class LeagueController {
     @GetMapping("/leagues")
     public ResponseEntity<List<League>> getLeagues(@RequestParam String username) {
         Long userId = userService.findByLogin(username).getId();
+
         List<League> leagues = leagueService.getLeagues(userId);
 
         //Checking to see if the league exists.
